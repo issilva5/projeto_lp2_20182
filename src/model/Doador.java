@@ -16,10 +16,11 @@ public class Doador  extends Usuario{
 	 * @param email email do usuario doador
 	 * @param docId documento de identificacao do usuario doador
 	 * @param celular celular do usuario doador
+	 * @param sistemaId número do cadastro do usuário no sitema.
 	 */
 
-	public Doador(String nome, String email, String docId, String celular,String classe) {
-		super(nome, email, docId, celular,classe,"doador");
+	public Doador(String nome, String email, String docId, String celular,String classe, int sistemaId) {
+		super(nome, email, docId, celular,classe,"doador",sistemaId);
 	}
 
 }

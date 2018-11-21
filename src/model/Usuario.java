@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Representacao de um Usuario
  */
-
+@SuppressWarnings("unused")
 public abstract class Usuario {
 
 	/**
@@ -42,6 +42,11 @@ public abstract class Usuario {
 	private String status;
 
 	/**
+	 * Número do cadastro do usuário no sitema.
+	 */
+	private int sistemaId;
+
+	/**
 	 * 
 	 * Metodo responsavel por construir um usuario a partir do nome,email, documento
 	 * de identificao, celular e o status do usuario. O status do usuario pode ser
@@ -53,9 +58,10 @@ public abstract class Usuario {
 	 * @param celular celular do usuario
 	 * @param classe  classe do usuario
 	 * @param status  tipo de usuario
+	 * @param sistemaId número do cadastro do usuário no sitema.
 	 */
 
-	public Usuario(String nome, String email, String docId, String celular, String classe, String status) {
+	public Usuario(String nome, String email, String docId, String celular, String classe, String status, int sistemaId) {
 		
 		final List<String> classesPermitidas = Arrays.asList("PESSOA_FISICA", "IGREJA", "ORGAO_PUBLICO_MUNICIPAL",
 				"ORGAO_PUBLICO_ESTADUAL", "ORGAO_PUBLICO_FEDERAL", "ONG", "ASSOCIACAO", "SOCIEDADE");
@@ -90,6 +96,7 @@ public abstract class Usuario {
 		this.celular = celular;
 		this.classe = classe;
 		this.status = status;
+		this.sistemaId = sistemaId;
 	}
 
 	/**
@@ -185,6 +192,14 @@ public abstract class Usuario {
 		} else if (!docId.equals(other.docId))
 			return false;
 		return true;
+	}
+
+	/**
+	 * Retorna o número do cadastro do usuário no sitema.
+	 * @return número do cadastro do usuário no sitema.
+	 */
+	public int getSistemaId() {
+		return sistemaId;
 	}
 
 }
