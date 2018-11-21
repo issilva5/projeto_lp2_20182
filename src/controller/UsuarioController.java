@@ -3,16 +3,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import model.Doador;
 import model.Receptor;
 import model.Usuario;
-import util.Comparador;
 
 /**
  * Implementa o Controlador de Usuários do sistema.
@@ -33,7 +30,7 @@ public class UsuarioController {
 	 * Inicializa o controller.
 	 */
 	public UsuarioController() {
-		this.usuarios = new HashMap<>();
+		this.usuarios = new LinkedHashMap<>();
 	}
 	
 	/**
@@ -119,38 +116,20 @@ public class UsuarioController {
 	 */
 	public String pesquisaUsuarioPorNome(String nome) {
 		
-		List<Usuario> auxiliar = this.getUsuarioPorNome(nome);
-		
 		if (nome == null || nome.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
 		}
 		
-		if(auxiliar.size() == 0) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + nome);
-		}
-		
 		String texto = "";
-		
-		for(Usuario u : auxiliar) {
-			texto += u.toString() + " | ";
-		}
-		
-		return texto.substring(0, texto.length() - 3);
-		
-	}
-	
-	private List<Usuario> getUsuarioPorNome(String nome) {
-		List<Usuario> auxiliar = new ArrayList<>();
 		
 		for(Usuario u : this.usuarios.values()) {
 			if(u.getNome().equals(nome)) {
-				auxiliar.add(u);
+				texto += u.toString() + " | ";
 			}
 		}
 		
-		Collections.sort(auxiliar, new Comparador());
+		return texto.isEmpty() ? ("Usuario nao encontrado: " + nome) : texto.substring(0, texto.length() - 3);
 		
-		return auxiliar;
 	}
 	
 	/**
