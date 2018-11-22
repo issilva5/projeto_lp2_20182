@@ -16,4 +16,9 @@ public class Item {
 		
 	}
 
+	public int getQuantidade() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

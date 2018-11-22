@@ -228,8 +228,10 @@ public abstract class Usuario {
 	 * @param idItem identificador único do item a ser adicionado.
 	 * @param quantidade nova quantidade do item.
 	 */
-	public void atualizaQuantidadeItem(int idItem, int quantidade) {
+	public int atualizaQuantidadeItem(int idItem, int quantidade) {
+		int aux = (this.itens.get(idItem).getQuantidade() - quantidade)*(-1);
 		this.itens.get(idItem).setQuantidade(quantidade);
+		return aux;
 	}
 	
 	/**

@@ -271,14 +271,15 @@ public class UsuarioController {
 	 * @param idItem
 	 * @param idDoador
 	 * @param quantidade
+	 * @return
 	 */
-	public void atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
+	public int atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
 		
 		if(!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 		
-		this.usuarios.get(idDoador).atualizaQuantidadeItem(idItem, quantidade);
+		return this.usuarios.get(idDoador).atualizaQuantidadeItem(idItem, quantidade);
 		
 	}
 	
