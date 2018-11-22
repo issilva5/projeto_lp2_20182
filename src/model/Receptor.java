@@ -21,8 +21,8 @@ public class Receptor extends Usuario {
 	 * @param sistemaId número do cadastro do usuário no sitema.
 	 */
 
-	public Receptor(String nome, String email, String docId, String celular,String classe, int sistemaId) {
-		super(nome, email, docId, celular,classe,"receptor", sistemaId);
+	public Receptor(String nome, String email, String docId, String celular,String classe) {
+		super(nome, email, docId, celular,classe,"receptor");
 	}
 
 }
