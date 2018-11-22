@@ -22,11 +22,6 @@ public class UsuarioController {
 	private Map<String, Usuario> usuarios;
 	
 	/**
-	 * Número do cadastro do usuário no sitema.
-	 */
-	private int sistemaId = 0;
-	
-	/**
 	 * Inicializa o controller.
 	 */
 	public UsuarioController() {
@@ -79,9 +74,8 @@ public class UsuarioController {
 			throw new UnsupportedOperationException("Usuario ja existente: " + docId);
 		}
 		
-		Usuario aux = new Doador(nome, email, docId, celular, classe, this.sistemaId);
+		Usuario aux = new Doador(nome, email, docId, celular, classe);
 		this.usuarios.put(docId, aux);
-		this.sistemaId++;
 		return docId;
 	}
 	
@@ -227,9 +221,7 @@ public class UsuarioController {
 			return;
 		}
 		
-		Usuario aux = new Receptor(nome, email, docId, celular, classe, this.sistemaId);
-		
+		Usuario aux = new Receptor(nome, email, docId, celular, classe);
 		this.usuarios.put(docId, aux);
-		this.sistemaId++;
 	}
 }
