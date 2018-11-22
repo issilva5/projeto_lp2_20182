@@ -63,7 +63,13 @@ public class ItemController {
 			throw new NullPointerException("Entrada invalida: tag nao pode ser nula");
 
 		}
-
+		
+		/*
+		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
+		 * PARA LIDAR COM O numeroID, INICIALIZAR ELE COM 0 E INCREMENTAR
+		 * ANTES DE CHAMAR A FUNÇÃO DE CRIAÇÃO DO ITEM.
+		 */
+		
 		if (usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -96,6 +102,10 @@ public class ItemController {
 
 		}
 
+		/*
+		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
+		 */
+		
 		if (this.usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -110,7 +120,7 @@ public class ItemController {
 		return this.itens.get(Integer.parseInt(idItem)).toString();
 
 	}
-
+	
 	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
@@ -129,6 +139,10 @@ public class ItemController {
 
 		}
 
+		/*
+		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
+		 */
+		
 		if (this.usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -151,7 +165,7 @@ public class ItemController {
 		return this.itens.get(Integer.parseInt(idItem)).toString();
 
 	}
-
+	
 	public void removeItemParaDoacao(String idItem, String idDoador) {
 
 		if (!this.itens.containsKey(Integer.parseInt(idItem))) {
@@ -166,6 +180,10 @@ public class ItemController {
 
 		}
 
+		/*
+		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
+		 */
+		
 		if (this.usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -176,10 +194,6 @@ public class ItemController {
 		}
 		
 		this.itens.remove(Integer.parseInt(idItem));
-		
-	}
-	
-	public void removerItensUsuario(String idUsuario) {
 		
 	}
 

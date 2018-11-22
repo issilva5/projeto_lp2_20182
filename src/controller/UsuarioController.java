@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import model.Doador;
+import model.Item;
 import model.Receptor;
 import model.Usuario;
 
@@ -105,7 +106,7 @@ public class UsuarioController {
 	 * Caso hajam mais de um usuário com mesmo nome, todos são listados na ordem em que foram inseridos no sistema.
 	 * Lança exceção caso o nome passado seja vazio, nulo ou não esteja cadastrado.
 	 * 
-	 * @param nome
+	 * @param nome nome a ser pesquisado.
 	 * @return String contendo a representação de todos os usuários com o dado nome.
 	 */
 	public String pesquisaUsuarioPorNome(String nome) {
@@ -135,7 +136,7 @@ public class UsuarioController {
 	 * @param email novo email.
 	 * @param celular novo celular.
 	 */
-	public void atualizaUsuario(String docId, String nome, String email, String celular) {
+	public String atualizaUsuario(String docId, String nome, String email, String celular) {
 		
 		if (docId == null || docId.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
@@ -147,18 +148,20 @@ public class UsuarioController {
 		
 		if(nome != "") {
 			this.usuarios.get(docId).setEmail(email);
-			return;
+			return this.usuarios.get(docId).toString();
 		}
 		
 		if(email != "") {
 			this.usuarios.get(docId).setNome(nome);
-			return;
+			return this.usuarios.get(docId).toString();
 		}
 		
 		if(celular != "") {
 			this.usuarios.get(docId).setCelular(celular);
-			return;
+			return this.usuarios.get(docId).toString();
 		}
+		
+		return "";
 		
 	}
 	
@@ -225,8 +228,87 @@ public class UsuarioController {
 		this.usuarios.put(docId, aux);
 	}
 
+	@Deprecated
 	public boolean existeUsuario(String idDoador) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param idDoador
+	 * @param idItem
+	 * @param i
+	 * @return
+	 */
+	public int adicionaItemParaDoacao(String idDoador, int idItem, Item i) {
+		
+		if(!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+		}
+		
+		this.usuarios.get(idDoador).adicionaItem(idItem, i);
+		return idItem;
+	}
+	
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 * @return
+	 */
+	public String exibeItemParaDoacao(int idItem, String idDoador) {
+		
+		if(!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+		}
+		
+		return this.usuarios.get(idDoador).exibeItem(idItem);
+	}
+	
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 * @param quantidade
+	 */
+	public void atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
+		
+		if(!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+		}
+		
+		this.usuarios.get(idDoador).atualizaQuantidadeItem(idItem, quantidade);
+		
+	}
+	
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 * @param tags
+	 */
+	public void atualizaTagsItem(int idItem, String idDoador, String tags) {
+		
+		if(!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+		}
+		
+		this.usuarios.get(idDoador).atualizaTagsItem(idItem, tags);
+	}
+	
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 */
+	public void removeItemParaDoacao(int idItem, String idDoador) {
+		
+		if(!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+		}
+		
+		this.usuarios.get(idDoador).removeItem(idItem);
+		
 	}
 }

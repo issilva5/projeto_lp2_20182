@@ -1,6 +1,8 @@
 package model;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Representacao de um Usuario
@@ -41,6 +43,11 @@ public abstract class Usuario {
 	 */
 	private String status;
 
+	/**
+	 * Itens do usuário cadastrados no sistema.
+	 */
+	private Map<Integer, Item> itens;
+	
 	/**
 	 * 
 	 * Metodo responsavel por construir um usuario a partir do nome,email, documento
@@ -91,6 +98,7 @@ public abstract class Usuario {
 		this.celular = celular;
 		this.classe = classe;
 		this.status = status;
+		this.itens = new HashMap<>();
 	}
 
 	/**
@@ -187,5 +195,69 @@ public abstract class Usuario {
 			return false;
 		return true;
 	}
+	
+	/**
+	 * Adiciona um novo item a coleção de itens do usuário.
+	 * 
+	 * @param idItem identificador único do item a ser adicionado.
+	 * @param i item a ser adicionado.
+	 */
+	public void adicionaItem(int idItem, Item i) {
+		this.itens.put(idItem, i);
+	}
+	
+	/**
+	 * Remove um item da coleção de itens do usuário.
+	 * 
+	 * @param idItem identificador único do item a ser adicionado.
+	 */
+	public void removeItem(int idItem) {
+		
+		if (!this.itens.containsKey(idItem)) {
+
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+
+		}
+		
+		this.itens.remove(idItem);
+	}
+	
+	/**
+	 * Atualiza a quantidade de um item.
+	 * 
+	 * @param idItem identificador único do item a ser adicionado.
+	 * @param quantidade nova quantidade do item.
+	 */
+	public void atualizaQuantidadeItem(int idItem, int quantidade) {
+		this.itens.get(idItem).setQuantidade(quantidade);
+	}
+	
+	/**
+	 * Atualiza as tags de um item.
+	 * 
+	 * @param idItem identificador único do item a ser adicionado.
+	 * @param tags novas tags do item.
+	 */
+	public void atualizaTagsItem(int idItem, String tags) {
+		this.itens.get(idItem).setTag(tags);
+	}
+	
+	/**
+	 * Retorna a representação textual de um item.
+	 * 
+	 * @param idItem identificador único do item a ser adicionado.
+	 * @return a representação textual de um item.
+	 */
+	public String exibeItem(int idItem) {
+		
+		if (!this.itens.containsKey(idItem)) {
+
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+
+		}
+		
+		return this.itens.get(idItem).toString();
+	}
+	
 
 }
