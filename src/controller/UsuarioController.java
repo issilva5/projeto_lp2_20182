@@ -224,4 +224,9 @@ public class UsuarioController {
 		Usuario aux = new Receptor(nome, email, docId, celular, classe);
 		this.usuarios.put(docId, aux);
 	}
+
+	public boolean existeUsuario(String idDoador) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
