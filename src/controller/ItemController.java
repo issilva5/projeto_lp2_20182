@@ -1,17 +1,12 @@
 package controller;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import model.Item;
 
 public class ItemController {
 
 	private Set<String> descritores;
-
-	private Map<Integer, Item> itens;
 
 	private UsuarioController usuarioController;
 
@@ -19,7 +14,6 @@ public class ItemController {
 
 	public ItemController(UsuarioController usuarioController) {
 		this.descritores = new HashSet<>();
-		this.itens = new HashMap<>();
 		this.usuarioController = usuarioController;
 		this.numeroID = 1;
 	}
@@ -63,13 +57,8 @@ public class ItemController {
 			throw new NullPointerException("Entrada invalida: tag nao pode ser nula");
 
 		}
-		
-		/*
-		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
-		 * PARA LIDAR COM O numeroID, INICIALIZAR ELE COM 0 E INCREMENTAR
-		 * ANTES DE CHAMAR A FUNÇÃO DE CRIAÇÃO DO ITEM.
-		 */
-		
+
+	
 		if (usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -81,7 +70,7 @@ public class ItemController {
 			this.descritores.add(descricaoItem);
 		}
 
-		this.itens.put(this.numeroID, new Item(this.numeroID, descricaoItem, idDoador, quantidade, tags));
+		this.usuarioController.adicionaItemParaDoacao(idDoador,numeroID, descricaoItem, quantidade, tags);
 
 		this.numeroID++;
 
@@ -102,25 +91,21 @@ public class ItemController {
 
 		}
 
-		/*
-		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
-		 */
-		
 		if (this.usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 
-		if (this.itens.containsKey(Integer.parseInt(idItem)) == false) {
+		if (this.usuarioController.existeItem(idDoador, idItem) == false) {
 
 			throw new UnsupportedOperationException("Item nao encontrado: " + idItem);
 
 		}
 
-		return this.itens.get(Integer.parseInt(idItem)).toString();
+		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 
 	}
-	
+
 	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
@@ -139,10 +124,6 @@ public class ItemController {
 
 		}
 
-		/*
-		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
-		 */
-		
 		if (this.usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -154,21 +135,21 @@ public class ItemController {
 
 		if (tags.trim().isEmpty()) {
 
-			this.itens.get(Integer.parseInt(idItem)).setQuantidade(quantidade);
+			this.usuarioController.getUsuarios(idDoador).getItem(Integer.parseInt(idItem)).setQuantidade(quantidade);
 		}
 
 		if (quantidade == 0) {
 
-			this.itens.get(Integer.parseInt(idItem)).setTag(tags);
+			this.usuarioController.getUsuarios(idDoador).getItem(Integer.parseInt(idItem)).setTag(tags);
 		}
 
-		return this.itens.get(Integer.parseInt(idItem)).toString();
+		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 
 	}
-	
+
 	public void removeItemParaDoacao(String idItem, String idDoador) {
 
-		if (!this.itens.containsKey(Integer.parseInt(idItem))) {
+		if (!this.usuarioController.getUsuarios(idDoador).existeItem(Integer.parseInt(idItem))) {
 
 			throw new UnsupportedOperationException("Item nao encontrado: " + idDoador);
 
@@ -180,11 +161,7 @@ public class ItemController {
 
 		}
 
-		/*
-		 * TODO FAZER CHAMAR A FUNÇÃO NO USUARIOCONTROLLER
-		 */
-		
-		if (this.usuarioController.existeUsuario(idDoador) == false) {
+		if (!this.usuarioController.existeUsuario(idDoador)) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
@@ -192,9 +169,9 @@ public class ItemController {
 		if (Integer.parseInt(idItem) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
-		
-		this.itens.remove(Integer.parseInt(idItem));
-		
+
+		this.usuarioController.removeItemParaDoacao(Integer.parseInt(idItem), idDoador);
+
 	}
 
 }

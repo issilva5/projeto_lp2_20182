@@ -1,4 +1,5 @@
 package model;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -44,27 +45,27 @@ public abstract class Usuario {
 	private String status;
 
 	/**
-	 * Itens do usuário cadastrados no sistema.
+	 * Itens do usuafrio cadastrados no sistema.
 	 */
 	private Map<Integer, Item> itens;
-	
+
 	/**
 	 * 
 	 * Metodo responsavel por construir um usuario a partir do nome,email, documento
 	 * de identificao, celular e o status do usuario. O status do usuario pode ser
 	 * 'receptor' ou 'doador'.
 	 * 
-	 * @param nome    nome do usuario
-	 * @param email   e-mail do usuario
-	 * @param docId   documento de identificacao do usuario
-	 * @param celular celular do usuario
-	 * @param classe  classe do usuario
-	 * @param status  tipo de usuario
+	 * @param nome      nome do usuario
+	 * @param email     e-mail do usuario
+	 * @param docId     documento de identificacao do usuario
+	 * @param celular   celular do usuario
+	 * @param classe    classe do usuario
+	 * @param status    tipo de usuario
 	 * @param sistemaId número do cadastro do usuário no sitema.
 	 */
 
 	public Usuario(String nome, String email, String docId, String celular, String classe, String status) {
-		
+
 		final List<String> classesPermitidas = Arrays.asList("PESSOA_FISICA", "IGREJA", "ORGAO_PUBLICO_MUNICIPAL",
 				"ORGAO_PUBLICO_ESTADUAL", "ORGAO_PUBLICO_FEDERAL", "ONG", "ASSOCIACAO", "SOCIEDADE");
 
@@ -195,55 +196,61 @@ public abstract class Usuario {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Adiciona um novo item a coleção de itens do usuário.
 	 * 
-	 * @param idItem identificador único do item a ser adicionado.
-	 * @param i item a ser adicionado.
+	 * @param numeroID      identificador único do item a ser adicionado.
+	 * @param idDoador      identificador do doador
+	 * @param descricaoItem descricao do item
+	 * @param quantidade    quantidade do item
+	 * @param tags          tags do item
 	 */
-	public void adicionaItem(int idItem, Item i) {
-		this.itens.put(idItem, i);
+	public void adicionaItem(int numeroID, String idDoador, String descricaoItem, int quantidade, String tags) {
+
+		Item i = new Item(numeroID, descricaoItem, idDoador, quantidade, tags);
+
+		this.itens.put(numeroID, i);
 	}
-	
+
 	/**
 	 * Remove um item da coleção de itens do usuário.
 	 * 
 	 * @param idItem identificador único do item a ser adicionado.
 	 */
 	public void removeItem(int idItem) {
-		
+
 		if (!this.itens.containsKey(idItem)) {
 
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 
 		}
-		
+
 		this.itens.remove(idItem);
 	}
-	
+
 	/**
 	 * Atualiza a quantidade de um item.
 	 * 
-	 * @param idItem identificador único do item a ser adicionado.
+	 * @param idItem     identificador único do item a ser adicionado.
 	 * @param quantidade nova quantidade do item.
 	 */
 	public int atualizaQuantidadeItem(int idItem, int quantidade) {
-		int aux = (this.itens.get(idItem).getQuantidade() - quantidade)*(-1);
+		int aux = (this.itens.get(idItem).getQuantidade() - quantidade) * (-1);
 		this.itens.get(idItem).setQuantidade(quantidade);
 		return aux;
 	}
-	
+
 	/**
 	 * Atualiza as tags de um item.
 	 * 
 	 * @param idItem identificador único do item a ser adicionado.
-	 * @param tags novas tags do item.
+	 * @param tags   novas tags do item.
 	 */
 	public void atualizaTagsItem(int idItem, String tags) {
 		this.itens.get(idItem).setTag(tags);
 	}
-	
+
 	/**
 	 * Retorna a representação textual de um item.
 	 * 
@@ -251,15 +258,43 @@ public abstract class Usuario {
 	 * @return a representação textual de um item.
 	 */
 	public String exibeItem(int idItem) {
-		
+
 		if (!this.itens.containsKey(idItem)) {
 
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 
 		}
-		
+
 		return this.itens.get(idItem).toString();
 	}
+
+	public boolean existeItem(int idItem) {
+
+		if (idItem < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+		
+		if(!this.itens.containsKey(idItem)) {
+			
+			return false;
+		}
+		
+		return true;
+	}
 	
+	public Item getItem(int idItem) {
+		
+		if (idItem < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+		
+		if(!this.itens.containsKey(idItem)) {
+			
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+		}
+		
+		return this.itens.get(idItem);
+		
+	}
 
 }
