@@ -1,6 +1,5 @@
 package controller;
 import easyaccept.EasyAccept;
-import model.Item;
 
 public class Facade {
 

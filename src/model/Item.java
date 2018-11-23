@@ -23,7 +23,7 @@ public class Item {
 
 	public String getDescritor() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 }
