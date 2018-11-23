@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import model.Doador;
-import model.Item;
 import model.Receptor;
 import model.Usuario;
 
@@ -231,6 +230,7 @@ public class UsuarioController {
 		this.usuarios.put(docId, aux);
 	}
 
+	@Deprecated
 	public boolean existeUsuario(String idUsuario) {
 		
 		if (idUsuario == null || idUsuario.trim().isEmpty()) {
@@ -245,6 +245,7 @@ public class UsuarioController {
 		return true;
 	}
 	
+	@Deprecated
 	public boolean existeItem(String idDoador,String idItem) {
 		
 		if (idDoador == null || idDoador.trim().isEmpty()) {
