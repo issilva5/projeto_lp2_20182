@@ -218,15 +218,16 @@ public abstract class Usuario {
 	 * 
 	 * @param idItem identificador único do item a ser adicionado.
 	 */
-	public void removeItem(int idItem) {
+	public int removeItem(int idItem) {
 
 		if (!this.itens.containsKey(idItem)) {
 
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 
 		}
-
+		int aux = this.itens.get(idItem).getQuantidade();
 		this.itens.remove(idItem);
+		return aux;
 	}
 
 	/**

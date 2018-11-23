@@ -1,21 +1,25 @@
 package controller;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
+import model.Descritor;
 
 
 public class ItemController {
 
-	private Set<String> descritores;
+	private Map<String, Descritor> descritores;
 
 	private UsuarioController usuarioController;
 
 	private int numeroID;
 
 	public ItemController(UsuarioController usuarioController) {
-		this.descritores = new HashSet<>();
+		this.descritores = new TreeMap<>();
 		this.usuarioController = usuarioController;
-		this.numeroID = 1;
+		this.numeroID = 0;
 	}
 
 	public void adicionaDescritor(String descricao) {
@@ -25,11 +29,11 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: descricao nao pode ser vazia ou nula.");
 		}
 
-		if (this.descritores.contains(descricao)) {
+		if (this.descritores.containsKey(descricao)) {
 			throw new UnsupportedOperationException("Descritor de Item ja existente: " + descricao);
 		}
 
-		this.descritores.add(descricao);
+		this.descritores.put(descricao, new Descritor(descricao, 0));
 
 	}
 
@@ -65,16 +69,18 @@ public class ItemController {
 
 		}
 
-		if (!this.descritores.contains(descricaoItem)) {
+		if (!this.descritores.containsKey(descricaoItem)) {
 
-			this.descritores.add(descricaoItem);
+			this.descritores.put(descricaoItem, new Descritor(descricaoItem, 0));
 		}
 
-		this.usuarioController.adicionaItemParaDoacao(idDoador,numeroID, descricaoItem, quantidade, tags);
-
 		this.numeroID++;
+		
+		this.descritores.get(descricaoItem).changeQuant(quantidade);
+		
+		this.usuarioController.adicionaItemParaDoacao(idDoador,this.numeroID, descricaoItem, quantidade, tags);
 
-		return Integer.toString(numeroID - 1);
+		return Integer.toString(this.numeroID);
 	}
 
 	public String exibeItem(String idItem, String idDoador) {
@@ -134,13 +140,14 @@ public class ItemController {
 		}
 
 		if (tags.trim().isEmpty()) {
-
-			this.usuarioController.getUsuarios(idDoador).getItem(Integer.parseInt(idItem)).setQuantidade(quantidade);
+			int delta = this.usuarioController.atualizaQuantidadeItem(Integer.parseInt(idItem), idDoador, quantidade);
+			String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
+			this.descritores.get(descritor).changeQuant(delta);
 		}
 
 		if (quantidade == 0) {
 
-			this.usuarioController.getUsuarios(idDoador).getItem(Integer.parseInt(idItem)).setTag(tags);
+			this.usuarioController.atualizaTagsItem(Integer.parseInt(idItem), idDoador, tags);
 		}
 
 		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
@@ -170,8 +177,9 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		this.usuarioController.removeItemParaDoacao(Integer.parseInt(idItem), idDoador);
-
+		int delta = this.usuarioController.removeItemParaDoacao(Integer.parseInt(idItem), idDoador);
+		String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
+		this.descritores.get(descritor).changeQuant(delta);
 	}
 
 }

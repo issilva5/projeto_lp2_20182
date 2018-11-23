@@ -21,4 +21,9 @@ public class Item {
 		return 0;
 	}
 
+	public String getDescritor() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -354,13 +354,17 @@ public class UsuarioController {
 	 * @param idItem
 	 * @param idDoador
 	 */
-	public void removeItemParaDoacao(int idItem, String idDoador) {
+	public int removeItemParaDoacao(int idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 
-		this.usuarios.get(idDoador).removeItem(idItem);
+		return this.usuarios.get(idDoador).removeItem(idItem);
 
+	}
+
+	public String getItemDescritor(int idItem, String idDoador) {
+		return this.usuarios.get(idDoador).getItem(idItem).getDescritor();
 	}
 }
