@@ -115,13 +115,14 @@ public class ItemController {
 		return Integer.toString(this.numeroID);
 	}
 
+	
 	/**
+	 * Exibe um item de um doador específico.
 	 * 
-	 * @param idItem
-	 * @param idDoador
-	 * @return
+	 * @param idItem identificador do item a ser exibido.
+	 * @param idDoador identificador do usuário.
+	 * @return String contendo a representação do item.
 	 */
-
 	public String exibeItem(String idItem, String idDoador) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
@@ -141,12 +142,13 @@ public class ItemController {
 	}
 
 	/**
+	 * Atualiza a quantidade ou as tags de um item de um doador.
 	 * 
-	 * @param idItem
-	 * @param idDoador
-	 * @param quantidade
-	 * @param tags
-	 * @return
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do doador.
+	 * @param quantidade nova quantidade do item.
+	 * @param tags novas tags.
+	 * @return String contendo a representação do item.
 	 */
 
 	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
