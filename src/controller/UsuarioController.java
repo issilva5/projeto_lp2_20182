@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,6 +9,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
 import model.Doador;
 import model.Receptor;
 import model.Usuario;
@@ -30,9 +34,9 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Método responsável por adicionar um usuário doador ao sistema. Lança exceção
-	 * caso algum parâmetro passado seja nulo ou vazio, ou ainda caso a classe
-	 * passada não seja permitida pelo sistema.
+	 * Adicionar um usuário doador ao sistema. Lança exceção caso algum parâmetro
+	 * passado seja nulo ou vazio, ou ainda caso a classe passada não seja permitida
+	 * pelo sistema.
 	 * 
 	 * @param docId     documento de identificacao do usuario
 	 * @param nome      nome do usuario
@@ -73,7 +77,7 @@ public class UsuarioController {
 		}
 
 		if (this.usuarios.containsKey(docId)) {
-			throw new UnsupportedOperationException("Usuario ja existente: " + docId);
+			throw new UnsupportedOperationException("Usuario ja existente: " + docId + ".");
 		}
 
 		Usuario aux = new Doador(nome, email, docId, celular, classe);
@@ -95,7 +99,7 @@ public class UsuarioController {
 		}
 
 		if (!this.usuarios.containsKey(docId)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId + ".");
 		}
 
 		return this.usuarios.get(docId).toString();
@@ -124,7 +128,11 @@ public class UsuarioController {
 			}
 		}
 
-		return texto.isEmpty() ? ("Usuario nao encontrado: " + nome) : texto.substring(0, texto.length() - 3);
+		if (texto.isEmpty()) {
+			throw new NoSuchElementException("Usuario nao encontrado: " + nome + ".");
+		}
+
+		return texto.substring(0, texto.length() - 3);
 
 	}
 
@@ -144,25 +152,25 @@ public class UsuarioController {
 		}
 
 		if (!this.usuarios.containsKey(docId)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId + ".");
 		}
 
-		if (nome != "") {
-			this.usuarios.get(docId).setEmail(email);
-			return this.usuarios.get(docId).toString();
-		}
-
-		if (email != "") {
+		if (nome != null && !nome.trim().isEmpty()) {
 			this.usuarios.get(docId).setNome(nome);
 			return this.usuarios.get(docId).toString();
 		}
 
-		if (celular != "") {
+		if (email != null && !email.trim().isEmpty()) {
+			this.usuarios.get(docId).setEmail(email);
+			return this.usuarios.get(docId).toString();
+		}
+
+		if (celular != null && !celular.trim().isEmpty()) {
 			this.usuarios.get(docId).setCelular(celular);
 			return this.usuarios.get(docId).toString();
 		}
 
-		return "";
+		return this.usuarios.get(docId).toString();
 
 	}
 
@@ -180,10 +188,43 @@ public class UsuarioController {
 		}
 
 		if (!this.usuarios.containsKey(docId)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + docId + ".");
 		}
 
 		this.usuarios.remove(docId);
+	}
+
+	/**
+	 * Ler receptores
+	 * 
+	 * @param path
+	 */
+
+	public void lerReceptores(String path) throws IOException {
+
+		Scanner arquivoCSV = new Scanner(new File(path));
+		String linha = null;
+
+		while (arquivoCSV.hasNextLine()) {
+
+			linha = arquivoCSV.nextLine();
+
+			if (linha.equals("id,nome,e-mail,celular,classe")) {
+				continue;
+			}
+
+			String[] valores = linha.split(",");
+
+			if (valores.length != 5) {
+				throw new IOException("Campos invalidos");
+			}
+
+			this.adicionaReceptor(valores);
+
+		}
+
+		arquivoCSV.close();
+
 	}
 
 	/**
@@ -232,45 +273,45 @@ public class UsuarioController {
 
 	@Deprecated
 	public boolean existeUsuario(String idUsuario) {
-		
+
 		if (idUsuario == null || idUsuario.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
 		}
-		
-		if(!this.usuarios.containsKey(idUsuario)) {
-			
+
+		if (!this.usuarios.containsKey(idUsuario)) {
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Deprecated
-	public boolean existeItem(String idDoador,String idItem) {
-		
+	public boolean existeItem(String idDoador, String idItem) {
+
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
 		}
-		
-		if(!this.usuarios.containsKey(idDoador)) {
-			
+
+		if (!this.usuarios.containsKey(idDoador)) {
+
 			throw new UnsupportedOperationException("Item nao encontrado: " + idItem);
 		}
-		
+
 		if (idItem == null || idItem.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser vazia ou nula.");
 
 		}
-		
+
 		return this.usuarios.get(idDoador).existeItem(Integer.parseInt(idItem));
-		
+
 	}
 
 	/**
 	 * 
 	 * @param idUsuario
-	 * @return usuario 
+	 * @return usuario
 	 */
 
 	public Usuario getUsuarios(String idUsuario) {
@@ -293,7 +334,7 @@ public class UsuarioController {
 	 * @param i
 	 * @return
 	 */
-	public int adicionaItemParaDoacao(String idDoador,int idItem,String descricaoItem, int quantidade, String tags) {
+	public int adicionaItemParaDoacao(String idDoador, int idItem, String descricaoItem, int quantidade, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -312,7 +353,7 @@ public class UsuarioController {
 	public String exibeItemParaDoacao(int idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
 		}
 
 		return this.usuarios.get(idDoador).exibeItem(idItem);
@@ -328,7 +369,7 @@ public class UsuarioController {
 	public int atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
 		}
 
 		return this.usuarios.get(idDoador).atualizaQuantidadeItem(idItem, quantidade);
@@ -344,7 +385,7 @@ public class UsuarioController {
 	public void atualizaTagsItem(int idItem, String idDoador, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
 		}
 
 		this.usuarios.get(idDoador).atualizaTagsItem(idItem, tags);
@@ -358,7 +399,7 @@ public class UsuarioController {
 	public int removeItemParaDoacao(int idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
 		}
 
 		return this.usuarios.get(idDoador).removeItem(idItem);
@@ -368,4 +409,5 @@ public class UsuarioController {
 	public String getItemDescritor(int idItem, String idDoador) {
 		return this.usuarios.get(idDoador).getItem(idItem).getDescritor();
 	}
+
 }

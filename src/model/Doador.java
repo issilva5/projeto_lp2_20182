@@ -8,7 +8,7 @@ package model;
 public class Doador  extends Usuario{
 	
 	/**
-	 * Metodo responsavel por construir um usuario doador a partir do nome,email, documento
+	 * Constroi um usuario doador a partir do nome,email, documento
 	 * de identificado , celular e classe. O status do usuario sera
 	 * 'doador'.
 	 * 

@@ -9,7 +9,7 @@ package model;
 public class Receptor extends Usuario {
 	
 	/**
-	 * Metodo responsavel por construir um usuario receptor a partir do nome,email, documento
+	 * Constroi um usuario receptor a partir do nome,email, documento
 	 * de identificado, celular e classe. O status do usuario sera 
 	 * 'receptor'
 	 * 

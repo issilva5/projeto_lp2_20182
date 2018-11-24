@@ -5,20 +5,51 @@ import java.util.TreeMap;
 
 import model.Descritor;
 
+/**
+ * 
+ * Implementa o controlador de item no sistema
+ *
+ */
 
 public class ItemController {
 
+	/**
+	 * Mapa de descritores
+	 */
+
 	private Map<String, Descritor> descritores;
+
+	/**
+	 * Instancia do controlador do usuario
+	 */
 
 	private UsuarioController usuarioController;
 
+	/**
+	 * numero de identificacao disponível para ser alocado ao item
+	 */
+
 	private int numeroID;
+
+	/**
+	 * Constroi um controlador de item a partir da instancia do controlador do
+	 * usuario
+	 * 
+	 * @param usuarioController controlador do usuario
+	 */
 
 	public ItemController(UsuarioController usuarioController) {
 		this.descritores = new TreeMap<>();
 		this.usuarioController = usuarioController;
 		this.numeroID = 0;
 	}
+
+	/**
+	 * Adicionar um descritor no mapa de descritores. Lanca excecao caso a descricao
+	 * seja nula, vazia ou já existente.
+	 * 
+	 * @param descricao descricao 
+	 */
 
 	public void adicionaDescritor(String descricao) {
 
@@ -34,6 +65,16 @@ public class ItemController {
 		this.descritores.put(descricao, new Descritor(descricao, 0));
 
 	}
+
+	/**
+	 * Adiciona item para doacao
+	 * 
+	 * @param idDoador
+	 * @param descricaoItem
+	 * @param quantidade
+	 * @param tags
+	 * @return
+	 */
 
 	public String adicionaItemParaDoacao(String idDoador, String descricaoItem, int quantidade, String tags) {
 
@@ -60,7 +101,6 @@ public class ItemController {
 
 		}
 
-	
 		if (usuarioController.existeUsuario(idDoador) == false) {
 
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
@@ -73,13 +113,20 @@ public class ItemController {
 		}
 
 		this.numeroID++;
-		
+
 		this.descritores.get(descricaoItem).changeQuant(quantidade);
-		
-		this.usuarioController.adicionaItemParaDoacao(idDoador,this.numeroID, descricaoItem, quantidade, tags);
+
+		this.usuarioController.adicionaItemParaDoacao(idDoador, this.numeroID, descricaoItem, quantidade, tags);
 
 		return Integer.toString(this.numeroID);
 	}
+
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 * @return
+	 */
 
 	public String exibeItem(String idItem, String idDoador) {
 
@@ -109,6 +156,15 @@ public class ItemController {
 		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 
 	}
+
+	/**
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 * @param quantidade
+	 * @param tags
+	 * @return
+	 */
 
 	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
 
@@ -151,6 +207,13 @@ public class ItemController {
 		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 
 	}
+
+	/**
+	 * Remove item para doacao a partir do id do tem e do id do doador.
+	 * 
+	 * @param idItem
+	 * @param idDoador
+	 */
 
 	public void removeItemParaDoacao(String idItem, String idDoador) {
 

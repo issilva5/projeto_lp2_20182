@@ -51,9 +51,9 @@ public abstract class Usuario {
 
 	/**
 	 * 
-	 * Metodo responsavel por construir um usuario a partir do nome,email, documento
-	 * de identificao, celular e o status do usuario. O status do usuario pode ser
-	 * 'receptor' ou 'doador'.
+	 * Construir um usuario a partir do nome,email, documento de identificao,
+	 * celular e o status do usuario. O status do usuario pode ser 'receptor' ou
+	 * 'doador'.
 	 * 
 	 * @param nome      nome do usuario
 	 * @param email     e-mail do usuario
@@ -103,7 +103,7 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel por alterar o nome do usuario.
+	 * Altera o nome do usuario.
 	 * 
 	 * @param nome nome do usuario
 	 */
@@ -113,7 +113,7 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel por alterar o email do usuario.
+	 * Altera o email do usuario.
 	 * 
 	 * @param email e-mail do usuario
 	 */
@@ -123,7 +123,7 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel por alterar o celular do usuario.
+	 * Altera o celular do usuario.
 	 * 
 	 * @param celular celular do usuario
 	 */
@@ -133,7 +133,7 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel por obter o nome do usuario
+	 * Obtem o nome do usuario
 	 * 
 	 * @return nome do usuario
 	 */
@@ -143,9 +143,9 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel por obter o documento de identificao do usuario.
+	 * Obtem o documento de identificacao do usuario.
 	 * 
-	 * @return documento identificao do usuario
+	 * @return documento identificacao do usuario
 	 */
 
 	public String getDocId() {
@@ -176,8 +176,7 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Metodo responsavel comparar dois usuarios a partir do documento de
-	 * identificacao.
+	 * Compara se dois usuarios sao iguais a partir do documento de identificacao.
 	 */
 
 	@Override
@@ -269,33 +268,48 @@ public abstract class Usuario {
 		return this.itens.get(idItem).toString();
 	}
 
+	/**
+	 * Verifica se o item esta vinculado ao usuario
+	 * 
+	 * @param idItem identificador do item
+	 * @return booleano indicando se o item esta vinculado
+	 */
+
 	public boolean existeItem(int idItem) {
 
 		if (idItem < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
-		
-		if(!this.itens.containsKey(idItem)) {
-			
+
+		if (!this.itens.containsKey(idItem)) {
+
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
+	/**
+	 * Obtem o objeto do item a partir do identificador do item. Lanca excecao se o
+	 * identificador do item for nulo, vazio ou nao encontrado *
+	 * 
+	 * @param idItem indetificador do item
+	 * @return objeto do item procurado
+	 */
+
 	public Item getItem(int idItem) {
-		
+
 		if (idItem < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
-		
-		if(!this.itens.containsKey(idItem)) {
-			
+
+		if (!this.itens.containsKey(idItem)) {
+
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 		}
-		
+
 		return this.itens.get(idItem);
-		
+
 	}
 
 }
