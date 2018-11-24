@@ -101,12 +101,6 @@ public class ItemController {
 
 		}
 
-		if (usuarioController.existeUsuario(idDoador) == false) {
-
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
-
-		}
-
 		if (!this.descritores.containsKey(descricaoItem)) {
 
 			this.descritores.put(descricaoItem, new Descritor(descricaoItem, 0));
@@ -142,17 +136,6 @@ public class ItemController {
 
 		}
 
-		if (this.usuarioController.existeUsuario(idDoador) == false) {
-
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
-		}
-
-		if (this.usuarioController.existeItem(idDoador, idItem) == false) {
-
-			throw new UnsupportedOperationException("Item nao encontrado: " + idItem);
-
-		}
-
 		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 
 	}
@@ -182,11 +165,6 @@ public class ItemController {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
 
-		}
-
-		if (this.usuarioController.existeUsuario(idDoador) == false) {
-
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 
 		if (quantidade < 0) {
@@ -227,11 +205,6 @@ public class ItemController {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
 
-		}
-
-		if (!this.usuarioController.existeUsuario(idDoador)) {
-
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 
 		if (Integer.parseInt(idItem) < 0) {

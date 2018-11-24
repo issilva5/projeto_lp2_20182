@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
 
 import model.Doador;
 import model.Receptor;
@@ -195,39 +193,6 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Ler receptores
-	 * 
-	 * @param path
-	 */
-
-	public void lerReceptores(String path) throws IOException {
-
-		Scanner arquivoCSV = new Scanner(new File(path));
-		String linha = null;
-
-		while (arquivoCSV.hasNextLine()) {
-
-			linha = arquivoCSV.nextLine();
-
-			if (linha.equals("id,nome,e-mail,celular,classe")) {
-				continue;
-			}
-
-			String[] valores = linha.split(",");
-
-			if (valores.length != 5) {
-				throw new IOException("Campos invalidos");
-			}
-
-			this.adicionaReceptor(valores);
-
-		}
-
-		arquivoCSV.close();
-
-	}
-
-	/**
 	 * Atualiza os dados dos usuários receptores cadastrados, e cadastrado caso este
 	 * ainda não tenha sido feito, a partir de um arquivo csv.
 	 * 
@@ -269,43 +234,6 @@ public class UsuarioController {
 
 		Usuario aux = new Receptor(nome, email, docId, celular, classe);
 		this.usuarios.put(docId, aux);
-	}
-
-	@Deprecated
-	public boolean existeUsuario(String idUsuario) {
-
-		if (idUsuario == null || idUsuario.trim().isEmpty()) {
-			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
-		}
-
-		if (!this.usuarios.containsKey(idUsuario)) {
-
-			return false;
-		}
-
-		return true;
-	}
-
-	@Deprecated
-	public boolean existeItem(String idDoador, String idItem) {
-
-		if (idDoador == null || idDoador.trim().isEmpty()) {
-			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
-		}
-
-		if (!this.usuarios.containsKey(idDoador)) {
-
-			throw new UnsupportedOperationException("Item nao encontrado: " + idItem);
-		}
-
-		if (idItem == null || idItem.trim().isEmpty()) {
-
-			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser vazia ou nula.");
-
-		}
-
-		return this.usuarios.get(idDoador).existeItem(Integer.parseInt(idItem));
-
 	}
 
 	/**

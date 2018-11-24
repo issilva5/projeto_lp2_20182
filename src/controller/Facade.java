@@ -32,7 +32,7 @@ public class Facade {
 	}
 
 	public void lerReceptores(String path) throws IOException {
-		this.usuarioController.lerReceptores(path);
+		this.usuarioController.atualizaReceptores(path);
 	}
 
 	public void atualizaReceptores(String path) {
@@ -60,7 +60,7 @@ public class Facade {
 	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
-		args = new String[] { "controller.Facade", "acceptance_tests/use_case_1.txt" };
+		args = new String[] {"controller.Facade", "acceptance_tests/use_case_1.txt"};
 		EasyAccept.main(args);
 	}
 
