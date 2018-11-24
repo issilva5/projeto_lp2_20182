@@ -108,10 +108,10 @@ public class ItemController {
 
 		this.numeroID++;
 
-		this.descritores.get(descricaoItem).changeQuant(quantidade);
-
 		this.usuarioController.adicionaItemParaDoacao(idDoador, this.numeroID, descricaoItem, quantidade, tags);
 
+		this.descritores.get(descricaoItem).changeQuant(quantidade);
+		
 		return Integer.toString(this.numeroID);
 	}
 
@@ -131,6 +131,10 @@ public class ItemController {
 
 		}
 
+		if (Integer.parseInt(idItem) < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+		
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
@@ -172,16 +176,16 @@ public class ItemController {
 		if (quantidade < 0) {
 			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
 		}
+		
+		if (quantidade == 0) {
+
+			this.usuarioController.atualizaTagsItem(Integer.parseInt(idItem), idDoador, tags);
+		}
 
 		if (tags.trim().isEmpty()) {
 			int delta = this.usuarioController.atualizaQuantidadeItem(Integer.parseInt(idItem), idDoador, quantidade);
 			String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
 			this.descritores.get(descritor).changeQuant(delta);
-		}
-
-		if (quantidade == 0) {
-
-			this.usuarioController.atualizaTagsItem(Integer.parseInt(idItem), idDoador, tags);
 		}
 
 		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
@@ -197,6 +201,12 @@ public class ItemController {
 
 	public void removeItemParaDoacao(String idItem, String idDoador) {
 
+		if (idItem == null || idItem.trim().isEmpty()) {
+
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser vazia ou nula.");
+
+		}
+		
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
@@ -210,6 +220,16 @@ public class ItemController {
 		int delta = this.usuarioController.removeItemParaDoacao(Integer.parseInt(idItem), idDoador);
 		String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
 		this.descritores.get(descritor).changeQuant(delta);
+	}
+
+	/**
+	 * Pega a quantidade de um descritor do sistema.
+	 * 
+	 * @param descritor descritor procurado.
+	 * @return quantidade.
+	 */
+	public int getDescritorQuant(String descritor) {
+		return this.descritores.get(descritor).getQuantidade();
 	}
 
 }
