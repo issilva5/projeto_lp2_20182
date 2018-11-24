@@ -106,12 +106,12 @@ class ItemTest {
 	
 	@Test
 	public void testEqualsNull() {
-		assertNotEquals(null, this.i);
+		assertNotEquals(this.i, null);
 	}
 	
 	@Test
 	public void testEqualsOutraClasse() {
-		assertNotEquals("Oi", this.i);
+		assertNotEquals(this.i, "Oi");
 	}
 	
 	@Test
