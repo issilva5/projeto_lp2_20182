@@ -237,46 +237,29 @@ public class UsuarioController {
 	}
 
 	/**
+	 * Adiciona um item para doação em um usuário doador.
 	 * 
-	 * @param idUsuario
-	 * @return usuario
+	 * @param idDoador identificador do usuário a ter item associado.
+	 * @param idItem identificador do item a ser associado.
+	 * @param descricaoItem descritor do item.
+	 * @param quantidade quantidade do item.
+	 * @param tags tags do item.
 	 */
-
-	public Usuario getUsuarios(String idUsuario) {
-
-		if (idUsuario == null || idUsuario.trim().isEmpty()) {
-			throw new IllegalArgumentException("Entrada invalida: nome nao pode ser vazio ou nulo.");
-		}
-
-		return this.usuarios.get(idUsuario);
-	}
-
-	public void setUsuarios(Map<String, Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
-
-	/**
-	 * 
-	 * @param idDoador
-	 * @param idItem
-	 * @param i
-	 * @return
-	 */
-	public int adicionaItemParaDoacao(String idDoador, int idItem, String descricaoItem, int quantidade, String tags) {
+	public void adicionaItemParaDoacao(String idDoador, int idItem, String descricaoItem, int quantidade, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador);
 		}
 
-		this.usuarios.get(idDoador).adicionaItem(idItem, idDoador, descricaoItem, quantidade, tags);
-		return idItem;
+		this.usuarios.get(idDoador).adicionaItem(idItem, descricaoItem, quantidade, tags);
 	}
 
 	/**
+	 * Exibe um item de um doador específico.
 	 * 
-	 * @param idItem
-	 * @param idDoador
-	 * @return
+	 * @param idItem identificador do item a ser exibido.
+	 * @param idDoador identificador do usuário.
+	 * @return String contendo a representação do item.
 	 */
 	public String exibeItemParaDoacao(int idItem, String idDoador) {
 
@@ -288,11 +271,12 @@ public class UsuarioController {
 	}
 
 	/**
+	 * Atualiza a quantidade de um item de um dado usuário doador.
 	 * 
-	 * @param idItem
-	 * @param idDoador
-	 * @param quantidade
-	 * @return
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do usuário.
+	 * @param quantidade novo quantidade do item.
+	 * @return diferença entre a quantidade antiga e nova.
 	 */
 	public int atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
 
@@ -305,10 +289,11 @@ public class UsuarioController {
 	}
 
 	/**
+	 * Atualiza as tags de um item de um dado usuário doador.
 	 * 
-	 * @param idItem
-	 * @param idDoador
-	 * @param tags
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do usuário.
+	 * @param tags novas tagas do item.
 	 */
 	public void atualizaTagsItem(int idItem, String idDoador, String tags) {
 
@@ -320,9 +305,11 @@ public class UsuarioController {
 	}
 
 	/**
+	 * Remove um item de um usuário doador.
 	 * 
-	 * @param idItem
-	 * @param idDoador
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do usuário.
+	 * @return quantidade que o item tinha ao ser removido.
 	 */
 	public int removeItemParaDoacao(int idItem, String idDoador) {
 
@@ -334,8 +321,20 @@ public class UsuarioController {
 
 	}
 
+	/**
+	 * Pega o descritor de um item de um usuário doador.
+	 * 
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do usuário.
+	 * @return descritor do item.
+	 */
 	public String getItemDescritor(int idItem, String idDoador) {
-		return this.usuarios.get(idDoador).getItem(idItem).getDescritor();
+		
+		if (!this.usuarios.containsKey(idDoador)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		}
+		
+		return this.usuarios.get(idDoador).getItemDescritor(idItem);
 	}
 
 }

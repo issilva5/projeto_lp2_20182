@@ -195,12 +195,6 @@ public class ItemController {
 
 	public void removeItemParaDoacao(String idItem, String idDoador) {
 
-		if (!this.usuarioController.getUsuarios(idDoador).existeItem(Integer.parseInt(idItem))) {
-
-			throw new UnsupportedOperationException("Item nao encontrado: " + idDoador);
-
-		}
-
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");

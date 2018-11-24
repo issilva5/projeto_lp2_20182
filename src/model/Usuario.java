@@ -61,7 +61,6 @@ public abstract class Usuario {
 	 * @param celular   celular do usuario
 	 * @param classe    classe do usuario
 	 * @param status    tipo de usuario
-	 * @param sistemaId número do cadastro do usuário no sitema.
 	 */
 
 	public Usuario(String nome, String email, String docId, String celular, String classe, String status) {
@@ -205,9 +204,9 @@ public abstract class Usuario {
 	 * @param quantidade    quantidade do item
 	 * @param tags          tags do item
 	 */
-	public void adicionaItem(int numeroID, String idDoador, String descricaoItem, int quantidade, String tags) {
+	public void adicionaItem(int numeroID, String descricaoItem, int quantidade, String tags) {
 
-		Item i = new Item(numeroID, descricaoItem, idDoador, quantidade, tags);
+		Item i = new Item(numeroID, descricaoItem, quantidade, tags);
 
 		this.itens.put(numeroID, i);
 	}
@@ -216,6 +215,7 @@ public abstract class Usuario {
 	 * Remove um item da coleção de itens do usuário.
 	 * 
 	 * @param idItem identificador único do item a ser adicionado.
+	 * @return quantidade do item removido.
 	 */
 	public int removeItem(int idItem) {
 
@@ -224,9 +224,8 @@ public abstract class Usuario {
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 
 		}
-		int aux = this.itens.get(idItem).getQuantidade();
-		this.itens.remove(idItem);
-		return aux;
+		
+		return this.itens.remove(idItem).getQuantidade();
 	}
 
 	/**
@@ -234,6 +233,7 @@ public abstract class Usuario {
 	 * 
 	 * @param idItem     identificador único do item a ser adicionado.
 	 * @param quantidade nova quantidade do item.
+	 * @return diferença entre a quantidade antiga e a nova.
 	 */
 	public int atualizaQuantidadeItem(int idItem, int quantidade) {
 		int aux = (this.itens.get(idItem).getQuantidade() - quantidade) * (-1);
@@ -290,14 +290,11 @@ public abstract class Usuario {
 	}
 
 	/**
-	 * Obtem o objeto do item a partir do identificador do item. Lanca excecao se o
-	 * identificador do item for nulo, vazio ou nao encontrado *
-	 * 
-	 * @param idItem indetificador do item
-	 * @return objeto do item procurado
+	 * Obtem o descritor de um item do usuário.
+	 * @param idItem identificador do item.
+	 * @return descritor do item.
 	 */
-
-	public Item getItem(int idItem) {
+	public String getItemDescritor(int idItem) {
 
 		if (idItem < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
@@ -308,7 +305,7 @@ public abstract class Usuario {
 			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
 		}
 
-		return this.itens.get(idItem);
+		return this.itens.get(idItem).getDescritor();
 
 	}
 
