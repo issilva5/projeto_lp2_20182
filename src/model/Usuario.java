@@ -32,7 +32,7 @@ public abstract class Usuario {
 	/**
 	 * Documento de idetificacao do usuario
 	 */
-	private String docId;
+	private String docID;
 
 	/**
 	 * Celular do usuario
@@ -57,7 +57,7 @@ public abstract class Usuario {
 	 * 
 	 * @param nome      nome do usuario
 	 * @param email     e-mail do usuario
-	 * @param docId     documento de identificacao do usuario
+	 * @param docID     documento de identificacao do usuario
 	 * @param celular   celular do usuario
 	 * @param classe    classe do usuario
 	 * @param status    tipo de usuario
@@ -94,7 +94,7 @@ public abstract class Usuario {
 
 		this.nome = nome;
 		this.email = email;
-		this.docId = docId;
+		this.docID = docId;
 		this.celular = celular;
 		this.classe = classe;
 		this.status = status;
@@ -147,8 +147,8 @@ public abstract class Usuario {
 	 * @return documento identificacao do usuario
 	 */
 
-	public String getDocId() {
-		return docId;
+	public String getDocID() {
+		return docID;
 	}
 
 	/**
@@ -158,7 +158,7 @@ public abstract class Usuario {
 
 	@Override
 	public String toString() {
-		return this.nome + "/" + this.docId + ", " + this.email + ", " + this.celular + ", status: " + this.status;
+		return this.nome + "/" + this.docID + ", " + this.email + ", " + this.celular + ", status: " + this.status;
 	}
 
 	/**
@@ -170,7 +170,7 @@ public abstract class Usuario {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((docId == null) ? 0 : docId.hashCode());
+		result = prime * result + ((docID == null) ? 0 : docID.hashCode());
 		return result;
 	}
 
@@ -187,10 +187,10 @@ public abstract class Usuario {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (docId == null) {
-			if (other.docId != null)
+		if (docID == null) {
+			if (other.docID != null)
 				return false;
-		} else if (!docId.equals(other.docId))
+		} else if (!docID.equals(other.docID))
 			return false;
 		return true;
 	}
@@ -214,18 +214,18 @@ public abstract class Usuario {
 	/**
 	 * Remove um item da coleção de itens do usuário.
 	 * 
-	 * @param idItem identificador único do item a ser adicionado.
+	 * @param itemId identificador único do item a ser adicionado.
 	 * @return quantidade do item removido.
 	 */
-	public int removeItem(int idItem) {
+	public int removeItem(int itemId) {
 
-		if (!this.itens.containsKey(idItem)) {
+		if (!this.itens.containsKey(itemId)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
 
 		}
 		
-		return this.itens.remove(idItem).getQuantidade();
+		return this.itens.remove(itemId).getQuantidade();
 	}
 
 	/**
@@ -244,44 +244,44 @@ public abstract class Usuario {
 	/**
 	 * Atualiza as tags de um item.
 	 * 
-	 * @param idItem identificador único do item a ser adicionado.
+	 * @param itemID identificador único do item a ser adicionado.
 	 * @param tags   novas tags do item.
 	 */
-	public void atualizaTagsItem(int idItem, String tags) {
-		this.itens.get(idItem).setTag(tags);
+	public void atualizaTagsItem(int itemID, String tags) {
+		this.itens.get(itemID).setTag(tags);
 	}
 
 	/**
 	 * Retorna a representação textual de um item.
 	 * 
-	 * @param idItem identificador único do item a ser adicionado.
+	 * @param itemID identificador único do item a ser adicionado.
 	 * @return a representação textual de um item.
 	 */
-	public String exibeItem(int idItem) {
+	public String exibeItem(int itemID) {
 
-		if (!this.itens.containsKey(idItem)) {
+		if (!this.itens.containsKey(itemID)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
 
 		}
 
-		return this.itens.get(idItem).toString();
+		return this.itens.get(itemID).toString();
 	}
 
 	/**
 	 * Verifica se o item esta vinculado ao usuario
 	 * 
-	 * @param idItem identificador do item
+	 * @param itemID identificador do item
 	 * @return booleano indicando se o item esta vinculado
 	 */
 
-	public boolean existeItem(int idItem) {
+	public boolean existeItem(int itemID) {
 
-		if (idItem < 0) {
+		if (itemID < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		if (!this.itens.containsKey(idItem)) {
+		if (!this.itens.containsKey(itemID)) {
 
 			return false;
 		}
@@ -291,21 +291,21 @@ public abstract class Usuario {
 
 	/**
 	 * Obtem o descritor de um item do usuário.
-	 * @param idItem identificador do item.
+	 * @param itemID identificador do item.
 	 * @return descritor do item.
 	 */
-	public String getItemDescritor(int idItem) {
+	public String getItemDescritor(int itemID) {
 
-		if (idItem < 0) {
+		if (itemID < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		if (!this.itens.containsKey(idItem)) {
+		if (!this.itens.containsKey(itemID)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docId);
+			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
 		}
 
-		return this.itens.get(idItem).getDescritor();
+		return this.itens.get(itemID).getDescritor();
 
 	}
 

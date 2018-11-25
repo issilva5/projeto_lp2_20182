@@ -11,24 +11,24 @@ public class Facade {
 
 	// Controller Usuario
 
-	public String adicionaDoador(String docId, String nome, String email, String celular, String classe) {
-		return usuarioController.adicionaDoador(docId, nome, email, celular, classe);
+	public String adicionaDoador(String docID, String nome, String email, String celular, String classe) {
+		return usuarioController.adicionaDoador(docID, nome, email, celular, classe);
 	}
 
-	public String pesquisaUsuarioPorId(String docId) {
-		return this.usuarioController.pesquisaUsuarioPorId(docId);
+	public String pesquisaUsuarioPorId(String docID) {
+		return this.usuarioController.pesquisaUsuarioPorId(docID);
 	}
 
 	public String pesquisaUsuarioPorNome(String nome) {
 		return this.usuarioController.pesquisaUsuarioPorNome(nome);
 	}
 
-	public String atualizaUsuario(String docId, String nome, String email, String celular) {
-		return this.usuarioController.atualizaUsuario(docId, nome, email, celular);
+	public String atualizaUsuario(String docID, String nome, String email, String celular) {
+		return this.usuarioController.atualizaUsuario(docID, nome, email, celular);
 	}
 
-	public void removeUsuario(String docId) {
-		this.usuarioController.removeUsuario(docId);
+	public void removeUsuario(String docID) {
+		this.usuarioController.removeUsuario(docID);
 	}
 
 	public void lerReceptores(String path) throws IOException {
@@ -40,27 +40,31 @@ public class Facade {
 	}
 
 	// ITEM CONTROLLER
-
-	public String adicionaItemParaDoacao(String idDoador, String descricaoItem, int quantidade, String tags) {
-		return this.itemController.adicionaItemParaDoacao(idDoador, descricaoItem, quantidade, tags);
+	
+	public void adicionaDescritor(String descricao) {
+		this.itemController.adicionaDescritor(descricao);
 	}
 
-	public String exibeItem(String idItem, String idDoador) {
-		return this.itemController.exibeItem(idItem, idDoador);
+	public String adicionaItemParaDoacao(String doadorID, String descricaoItem, int quantidade, String tags) {
+		return this.itemController.adicionaItemParaDoacao(doadorID, descricaoItem, quantidade, tags);
 	}
 
-	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
-		return this.itemController.atualizaItemParaDoacao(idItem, idDoador, quantidade, tags);
+	public String exibeItem(String itemID, String doadorID) {
+		return this.itemController.exibeItem(itemID, doadorID);
 	}
 
-	public void removeItemParaDoacao(String idItem, String idDoador) {
-		this.itemController.removeItemParaDoacao(idItem, idDoador);
+	public String atualizaItemParaDoacao(String itemID, String doadorID, int quantidade, String tags) {
+		return this.itemController.atualizaItemParaDoacao(itemID, doadorID, quantidade, tags);
+	}
+
+	public void removeItemParaDoacao(String itemID, String doadorID) {
+		this.itemController.removeItemParaDoacao(itemID, doadorID);
 	}
 
 	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
-		args = new String[] {"controller.Facade", "acceptance_tests/use_case_1.txt"};
+		args = new String[] {"controller.Facade", "acceptance_tests/use_case_1.txt","acceptance_tests/use_case_2.txt"};
 		EasyAccept.main(args);
 	}
 

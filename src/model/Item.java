@@ -1,20 +1,47 @@
 package model;
 
-import java.util.List;
-
+/**
+ * 
+ * Representacao de um Item
+ *
+ */
 public class Item {
 
+	/**
+	 * 
+	 */
+
 	private int itemID;
+
+	/**
+	 * 
+	 */
 	private String descritor;
+
+	/**
+	 * 
+	 */
 	private int quantidade;
-	private List<String> tags;
-	
+
+	/**
+	 * 
+	 */
+	private String tags;
+
+	/**
+	 * 
+	 * @param numeroID
+	 * @param descricaoItem
+	 * @param quantidade
+	 * @param tags
+	 */
+
 	public Item(int numeroID, String descricaoItem, int quantidade, String tags) {
 
 		if (numeroID < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
-		
+
 		if (descricaoItem == null || descricaoItem.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: descricao nao pode ser vazia ou nula.");
 
@@ -28,36 +55,79 @@ public class Item {
 			throw new NullPointerException("Entrada invalida: tag nao pode ser nula");
 		}
 		
-		// TODO Auto-generated constructor stub
+        this.itemID = numeroID;
+		this.descritor = descricaoItem;
+		this.tags = tags;
+		this.quantidade = quantidade;
+
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+
+	public int getItemID() {
+		return this.itemID;
+	}
+
+	/**
+	 * 
+	 * @param quantidade
+	 */
 
 	public void setQuantidade(int quantidade) {
-		// TODO Auto-generated method stub
-		
+
+		this.quantidade = quantidade;
+
 	}
+
+	/**
+	 * 
+	 * @param tags
+	 */
 
 	public void setTag(String tags) {
-		// TODO Auto-generated method stub
-		// ESSA FUNÇÃO VAI TER Q CONVERTER A STRING TAGS PRA ARRAYLIST
-		//CHAMAR ELA NO CONSTRUTOR TBM
+
+		this.tags = tags;
+
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
 
 	public int getQuantidade() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return this.quantidade;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+
 	public String getDescritor() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return this.descritor;
 	}
+
+	/**
+	 * 
+	 */
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return this.itemID + " - " + this.descritor + ", tags: [" + this.tags + "], quantidade: " + this.quantidade;
+
 	}
-	
+
+	/**
+	 * 
+	 */
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -66,6 +136,10 @@ public class Item {
 		result = prime * result + tags.hashCode();
 		return result;
 	}
+
+	/**
+	 * 
+	 */
 
 	@Override
 	public boolean equals(Object obj) {
@@ -89,10 +163,14 @@ public class Item {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+
 	public String getTag() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return this.tags;
 	}
-	
 
 }
