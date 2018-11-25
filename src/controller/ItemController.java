@@ -108,11 +108,13 @@ public class ItemController {
 
 		this.numeroID++;
 
-		this.usuarioController.adicionaItemParaDoacao(idDoador, this.numeroID, descricaoItem, quantidade, tags);
+		int[] r = this.usuarioController.adicionaItemParaDoacao(idDoador, "" + this.numeroID, descricaoItem, quantidade, tags);
+		
+		int delta = r[1];
 
-		this.descritores.get(descricaoItem).changeQuant(quantidade);
+		this.descritores.get(descricaoItem).changeQuant(delta);
 
-		return Integer.toString(this.numeroID);
+		return String.valueOf(r[0]);
 	}
 
 	/**
@@ -136,11 +138,11 @@ public class ItemController {
 
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
-			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
+			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
 		}
 
-		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
+		return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
 
 	}
 
@@ -168,26 +170,24 @@ public class ItemController {
 
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
-			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
+			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
 		}
 
-		if (quantidade < 0) {
-			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
+//		if (quantidade < 0) {
+//			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
+//		}
+
+		if (quantidade <= 0) {
+			this.usuarioController.atualizaTagsItem(idItem, idDoador, tags);
+			return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
 		}
 
-		if (quantidade == 0) {
+		int delta = this.usuarioController.atualizaQuantidadeItem(idItem, idDoador, quantidade);
+		String descritor = this.usuarioController.getItemDescritor(idItem, idDoador);
+		this.descritores.get(descritor).changeQuant(delta);
 
-			this.usuarioController.atualizaTagsItem(Integer.parseInt(idItem), idDoador, tags);
-		}
-
-		if (tags.trim().isEmpty()) {
-			int delta = this.usuarioController.atualizaQuantidadeItem(Integer.parseInt(idItem), idDoador, quantidade);
-			String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
-			this.descritores.get(descritor).changeQuant(delta);
-		}
-
-		return this.usuarioController.exibeItemParaDoacao(Integer.parseInt(idItem), idDoador);
+		return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
 
 	}
 
@@ -208,7 +208,7 @@ public class ItemController {
 
 		if (idDoador == null || idDoador.trim().isEmpty()) {
 
-			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazia ou nula.");
+			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
 		}
 
@@ -216,9 +216,10 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		int delta = this.usuarioController.removeItemParaDoacao(Integer.parseInt(idItem), idDoador);
-		String descritor = this.usuarioController.getItemDescritor(Integer.parseInt(idItem), idDoador);
-		this.descritores.get(descritor).changeQuant(delta);
+		String descritor = this.usuarioController.getItemDescritor(idItem, idDoador);
+		int delta = this.usuarioController.removeItemParaDoacao(idItem, idDoador);
+		
+		this.descritores.get(descritor).changeQuant(delta * -1);
 	}
 
 	/**

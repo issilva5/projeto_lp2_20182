@@ -9,7 +9,7 @@ import java.util.Map;
  * Representacao de um Usuario
  */
 @SuppressWarnings("unused")
-public abstract class Usuario {
+public class Usuario {
 
 	/**
 	 * Nome do usuario
@@ -47,7 +47,7 @@ public abstract class Usuario {
 	/**
 	 * Itens do usuafrio cadastrados no sistema.
 	 */
-	private Map<Integer, Item> itens;
+	private Map<String, Item> itens;
 
 	/**
 	 * 
@@ -204,11 +204,29 @@ public abstract class Usuario {
 	 * @param quantidade    quantidade do item
 	 * @param tags          tags do item
 	 */
-	public void adicionaItem(int numeroID, String descricaoItem, int quantidade, String tags) {
-
+	public int[] adicionaItem(String numeroID, String descricaoItem, int quantidade, String tags) {
+		
 		Item i = new Item(numeroID, descricaoItem, quantidade, tags);
-
+		
+		for(String aux : this.itens.keySet()) {
+			if(i.equals(this.itens.get(aux))) {
+				String numAux = this.itens.get(aux).getItemID();
+				int d = this.itens.get(aux).getQuantidade();
+				this.itens.remove(aux);
+				
+				i = new Item(numAux, descricaoItem, quantidade, tags);
+				
+				this.itens.put(numAux, i);
+				
+				int[] ret = {Integer.parseInt(numAux), this.itens.get(numAux).getQuantidade() - d};
+				
+				return ret;
+			}
+		}
+		
 		this.itens.put(numeroID, i);
+		int[] ret = {Integer.parseInt(numeroID), quantidade};
+		return ret;
 	}
 
 	/**
@@ -217,11 +235,15 @@ public abstract class Usuario {
 	 * @param itemId identificador único do item a ser adicionado.
 	 * @return quantidade do item removido.
 	 */
-	public int removeItem(int itemId) {
-
+	public int removeItem(String itemId) {
+		
+		if(this.itens.size() == 0) {
+			throw new UnsupportedOperationException("O Usuario nao possui itens cadastrados.");
+		}
+		
 		if (!this.itens.containsKey(itemId)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
+			throw new UnsupportedOperationException("Item nao encontrado: " + itemId + ".");
 
 		}
 		
@@ -235,7 +257,7 @@ public abstract class Usuario {
 	 * @param quantidade nova quantidade do item.
 	 * @return diferença entre a quantidade antiga e a nova.
 	 */
-	public int atualizaQuantidadeItem(int idItem, int quantidade) {
+	public int atualizaQuantidadeItem(String idItem, int quantidade) {
 		int aux = (this.itens.get(idItem).getQuantidade() - quantidade) * (-1);
 		this.itens.get(idItem).setQuantidade(quantidade);
 		return aux;
@@ -247,7 +269,14 @@ public abstract class Usuario {
 	 * @param itemID identificador único do item a ser adicionado.
 	 * @param tags   novas tags do item.
 	 */
-	public void atualizaTagsItem(int itemID, String tags) {
+	public void atualizaTagsItem(String itemID, String tags) {
+		
+		if (!this.itens.containsKey(itemID)) {
+
+			throw new UnsupportedOperationException("Item nao encontrado: " + itemID + ".");
+
+		}
+		
 		this.itens.get(itemID).setTag(tags);
 	}
 
@@ -257,11 +286,11 @@ public abstract class Usuario {
 	 * @param itemID identificador único do item a ser adicionado.
 	 * @return a representação textual de um item.
 	 */
-	public String exibeItem(int itemID) {
+	public String exibeItem(String itemID) {
 
 		if (!this.itens.containsKey(itemID)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
+			throw new UnsupportedOperationException("Item nao encontrado: " + itemID + ".");
 
 		}
 
@@ -275,9 +304,9 @@ public abstract class Usuario {
 	 * @return booleano indicando se o item esta vinculado
 	 */
 
-	public boolean existeItem(int itemID) {
+	public boolean existeItem(String itemID) {
 
-		if (itemID < 0) {
+		if (Integer.parseInt(itemID) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
@@ -294,15 +323,19 @@ public abstract class Usuario {
 	 * @param itemID identificador do item.
 	 * @return descritor do item.
 	 */
-	public String getItemDescritor(int itemID) {
+	public String getItemDescritor(String itemID) {
 
-		if (itemID < 0) {
+		if(this.itens.size() == 0) {
+			throw new UnsupportedOperationException("O Usuario nao possui itens cadastrados.");
+		}
+		
+		if (Integer.parseInt(itemID) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
 		if (!this.itens.containsKey(itemID)) {
 
-			throw new UnsupportedOperationException("Item nao encontrado: " + this.docID);
+			throw new UnsupportedOperationException("Item nao encontrado: " + itemID + ".");
 		}
 
 		return this.itens.get(itemID).getDescritor();

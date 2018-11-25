@@ -1,5 +1,9 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 
  * Representacao de um Item
@@ -11,7 +15,7 @@ public class Item {
 	 * 
 	 */
 
-	private int itemID;
+	private String itemID;
 
 	/**
 	 * 
@@ -26,7 +30,7 @@ public class Item {
 	/**
 	 * 
 	 */
-	private String tags;
+	private List<String> tags;
 
 	/**
 	 * 
@@ -36,9 +40,9 @@ public class Item {
 	 * @param tags
 	 */
 
-	public Item(int numeroID, String descricaoItem, int quantidade, String tags) {
+	public Item(String numeroID, String descricaoItem, int quantidade, String tags) {
 
-		if (numeroID < 0) {
+		if (Integer.parseInt(numeroID) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
@@ -57,7 +61,7 @@ public class Item {
 		
         this.itemID = numeroID;
 		this.descritor = descricaoItem;
-		this.tags = tags;
+		this.setTag(tags);
 		this.quantidade = quantidade;
 
 	}
@@ -67,7 +71,7 @@ public class Item {
 	 * @return
 	 */
 
-	public int getItemID() {
+	public String getItemID() {
 		return this.itemID;
 	}
 
@@ -76,10 +80,14 @@ public class Item {
 	 * @param quantidade
 	 */
 
-	public void setQuantidade(int quantidade) {
+	public int setQuantidade(int quantidade) {
 
+		if (quantidade <= 0) {
+			throw new IllegalArgumentException("Entrada invalida: quantidade deve ser maior que zero.");
+		}
+		int aux = quantidade - this.quantidade;
 		this.quantidade = quantidade;
-
+		return aux;
 	}
 
 	/**
@@ -88,9 +96,12 @@ public class Item {
 	 */
 
 	public void setTag(String tags) {
-
-		this.tags = tags;
-
+		
+		if (tags == null) return;
+		
+		List<String> aux = new ArrayList<>();
+		aux.addAll(Arrays.asList(tags.split(",")));
+		this.tags = aux;
 	}
 
 	/**
@@ -120,7 +131,7 @@ public class Item {
 	@Override
 	public String toString() {
 
-		return this.itemID + " - " + this.descritor + ", tags: [" + this.tags + "], quantidade: " + this.quantidade;
+		return this.itemID + " - " + this.descritor + ", tags: " + this.getTag() + ", quantidade: " + this.quantidade;
 
 	}
 
@@ -150,15 +161,9 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (descritor == null) {
-			if (other.descritor != null)
-				return false;
-		} else if (!descritor.equals(other.descritor))
+		if (!descritor.equals(other.descritor))
 			return false;
-		if (tags == null) {
-			if (other.tags != null)
-				return false;
-		} else if (!tags.equals(other.tags))
+		if (!tags.equals(other.tags))
 			return false;
 		return true;
 	}
@@ -170,7 +175,7 @@ public class Item {
 
 	public String getTag() {
 
-		return this.tags;
+		return this.tags.toString();
 	}
 
 }

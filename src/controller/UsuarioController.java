@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import model.Doador;
-import model.Receptor;
 import model.Usuario;
 
 /**
@@ -78,7 +76,7 @@ public class UsuarioController {
 			throw new UnsupportedOperationException("Usuario ja existente: " + docId + ".");
 		}
 
-		Usuario aux = new Doador(nome, email, docId, celular, classe);
+		Usuario aux = new Usuario(nome, email, docId, celular, classe, "doador");
 		this.usuarios.put(docId, aux);
 		return docId;
 	}
@@ -232,7 +230,7 @@ public class UsuarioController {
 			return;
 		}
 
-		Usuario aux = new Receptor(nome, email, docId, celular, classe);
+		Usuario aux = new Usuario(nome, email, docId, celular, classe, "receptor");
 		this.usuarios.put(docId, aux);
 	}
 
@@ -245,13 +243,13 @@ public class UsuarioController {
 	 * @param quantidade    quantidade do item.
 	 * @param tags          tags do item.
 	 */
-	public void adicionaItemParaDoacao(String idDoador, int idItem, String descricaoItem, int quantidade, String tags) {
+	public int[] adicionaItemParaDoacao(String idDoador, String idItem, String descricaoItem, int quantidade, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
 		}
 
-		this.usuarios.get(idDoador).adicionaItem(idItem, descricaoItem, quantidade, tags);
+		return this.usuarios.get(idDoador).adicionaItem(idItem, descricaoItem, quantidade, tags);
 	}
 
 	/**
@@ -261,7 +259,7 @@ public class UsuarioController {
 	 * @param idDoador identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
-	public String exibeItemParaDoacao(int idItem, String idDoador) {
+	public String exibeItemParaDoacao(String idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
@@ -278,7 +276,7 @@ public class UsuarioController {
 	 * @param quantidade novo quantidade do item.
 	 * @return diferença entre a quantidade antiga e nova.
 	 */
-	public int atualizaQuantidadeItem(int idItem, String idDoador, int quantidade) {
+	public int atualizaQuantidadeItem(String idItem, String idDoador, int quantidade) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
@@ -295,7 +293,7 @@ public class UsuarioController {
 	 * @param idDoador identificador do usuário.
 	 * @param tags     novas tagas do item.
 	 */
-	public void atualizaTagsItem(int idItem, String idDoador, String tags) {
+	public void atualizaTagsItem(String idItem, String idDoador, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
@@ -311,7 +309,7 @@ public class UsuarioController {
 	 * @param idDoador identificador do usuário.
 	 * @return quantidade que o item tinha ao ser removido.
 	 */
-	public int removeItemParaDoacao(int idItem, String idDoador) {
+	public int removeItemParaDoacao(String idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
@@ -328,7 +326,7 @@ public class UsuarioController {
 	 * @param idDoador identificador do usuário.
 	 * @return descritor do item.
 	 */
-	public String getItemDescritor(int idItem, String idDoador) {
+	public String getItemDescritor(String idItem, String idDoador) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
