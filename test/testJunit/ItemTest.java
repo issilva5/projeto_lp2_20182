@@ -13,13 +13,13 @@ class ItemTest {
 	
 	@BeforeEach
 	public void setUp() {
-		this.i = new Item("15", "fralda", 20, "geriatrica,grande");
+		this.i = new Item("15", "fralda", 20, "geriatrica,grande", "100");
 	}
 	
 	@Test
 	public void testItemIdNegativo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			new Item("-15", "fralda", 20, "geriatrica,grande");
+			new Item("-15", "fralda", 20, "geriatrica,grande", "100");
 		});
 		assertEquals("Entrada invalida: id do item nao pode ser negativo.", aux.getMessage());
 	}
@@ -27,7 +27,7 @@ class ItemTest {
 	@Test
 	public void testItemDescricaoNula() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			new Item("15", null, 20, "geriatrica,grande");
+			new Item("15", null, 20, "geriatrica,grande", "100");
 		});
 		assertEquals("Entrada invalida: descricao nao pode ser vazia ou nula.", aux.getMessage());
 	}
@@ -35,7 +35,7 @@ class ItemTest {
 	@Test
 	public void testItemDescricaoVazia() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			new Item("15", "   ", 20, "geriatrica,grande");
+			new Item("15", "   ", 20, "geriatrica,grande", "100");
 		});
 		assertEquals("Entrada invalida: descricao nao pode ser vazia ou nula.", aux.getMessage());
 	}
@@ -43,12 +43,12 @@ class ItemTest {
 	@Test
 	public void testItemQuantNegativa() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			new Item("15", "fralda", -20, "geriatrica,grande");
+			new Item("15", "fralda", -20, "geriatrica,grande", "100");
 		});
 		assertEquals("Entrada invalida: quantidade deve ser maior que zero.", aux.getMessage());
 		
 		aux = assertThrows(IllegalArgumentException.class, () -> {
-			new Item("15", "fralda", 0, "geriatrica,grande");
+			new Item("15", "fralda", 0, "geriatrica,grande", "100");
 		});
 		assertEquals("Entrada invalida: quantidade deve ser maior que zero.", aux.getMessage());
 	}
@@ -56,7 +56,7 @@ class ItemTest {
 	@Test
 	public void testItemTagNula() {
 		Throwable aux = assertThrows(NullPointerException.class, () -> {
-			new Item("15", "fralda", 20, null);
+			new Item("15", "fralda", 20, null, "100");
 		});
 		assertEquals("Entrada invalida: tag nao pode ser nula", aux.getMessage());
 	}
@@ -108,27 +108,27 @@ class ItemTest {
 	
 	@Test
 	public void testEquals() {
-		Item j = new Item("15", "fralda", 20, "geriatrica,grande");
+		Item j = new Item("15", "fralda", 20, "geriatrica,grande", "100");
 		assertEquals(j, this.i);
 		assertEquals(j.hashCode(), this.i.hashCode());
 	}
 	
 	@Test
 	public void testNotEquals() {
-		Item j = new Item("15", "fralda", 20, "geriatrica,pequena");
+		Item j = new Item("15", "fralda", 20, "geriatrica,pequena", "100");
 		assertNotEquals(j, this.i);
 		assertNotEquals(j.hashCode(), this.i.hashCode());
 	}
 	
 	@Test
 	public void testNotEqualsOrdemTags() {
-		Item j = new Item("15", "fralda", 20, "grande,geriatrica");
+		Item j = new Item("15", "fralda", 20, "grande,geriatrica", "100");
 		assertNotEquals(j, this.i);
 	}
 	
 	@Test
 	public void testNotEqualsDescritor() {
-		Item j = new Item("15", "fralda geriatrica", 20, "geriatrica,pequena");
+		Item j = new Item("15", "fralda geriatrica", 20, "geriatrica,pequena", "100");
 		assertNotEquals(j, this.i);
 	}
 	

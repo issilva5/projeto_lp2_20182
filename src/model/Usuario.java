@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,7 +207,7 @@ public class Usuario {
 	 */
 	public int[] adicionaItem(String numeroID, String descricaoItem, int quantidade, String tags) {
 		
-		Item i = new Item(numeroID, descricaoItem, quantidade, tags);
+		Item i = new Item(numeroID, descricaoItem, quantidade, tags, this.docID);
 		
 		for(String aux : this.itens.keySet()) {
 			if(i.equals(this.itens.get(aux))) {
@@ -214,7 +215,7 @@ public class Usuario {
 				int d = this.itens.get(aux).getQuantidade();
 				this.itens.remove(aux);
 				
-				i = new Item(numAux, descricaoItem, quantidade, tags);
+				i = new Item(numAux, descricaoItem, quantidade, tags, this.docID);
 				
 				this.itens.put(numAux, i);
 				
@@ -344,6 +345,24 @@ public class Usuario {
 
 		return this.itens.get(itemID).getDescritor();
 
+	}
+
+	/**
+	 * Retorna o status do usuário.
+	 * 
+	 * @return status do usuário.
+	 */
+	public String getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * Retorna os itens do usuário.
+	 * 
+	 * @return itens do usuário.
+	 */
+	public Collection<Item> getItens() {
+		return this.itens.values();
 	}
 
 }

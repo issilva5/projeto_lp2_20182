@@ -9,7 +9,7 @@ import java.util.List;
  * Representacao de um Item
  *
  */
-public class Item {
+public class Item implements Comparable<Item> {
 
 	/**
 	 * Identificador do item no sistema.
@@ -31,6 +31,11 @@ public class Item {
 	 * Tags do item.
 	 */
 	private List<String> tags;
+	
+	/**
+	 * Possuidor do item.
+	 */
+	private String dono;
 
 	/**
 	 * Inicializa um item.
@@ -39,9 +44,10 @@ public class Item {
 	 * @param descricaoItem descricao do item.
 	 * @param quantidade quantidade do item.
 	 * @param tags tags do item.
+	 * @param documento de identificacao do dono do item.
 	 */
 
-	public Item(String numeroID, String descricaoItem, int quantidade, String tags) {
+	public Item(String numeroID, String descricaoItem, int quantidade, String tags, String dono) {
 
 		if (Integer.parseInt(numeroID) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
@@ -64,7 +70,16 @@ public class Item {
 		this.descritor = descricaoItem;
 		this.setTag(tags);
 		this.quantidade = quantidade;
+		this.dono = dono;
+	}
 
+	/**
+	 * Retorno o possuidor desse item.
+	 * 
+	 * @return possuidor do item.
+	 */
+	public String getDono() {
+		return this.dono;
 	}
 
 	/**
@@ -177,6 +192,14 @@ public class Item {
 	public String getTag() {
 
 		return this.tags.toString();
+	}
+
+	/**
+	 * Implementa o compareTo. Pela ordem alfabética do descritor.
+	 */
+	@Override
+	public int compareTo(Item o) {
+		return this.descritor.compareTo(o.descritor);
 	}
 
 }

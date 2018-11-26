@@ -3,7 +3,7 @@ package model;
 /**
  * Representação dos descritores de itens do sistema.
  */
-public class Descritor {
+public class Descritor implements Comparable<Descritor>{
 	
 	/**
 	 * Nome do descritor.
@@ -84,6 +84,22 @@ public class Descritor {
 		if (!nome.equals(other.nome))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * Implementa o toString.
+	 */
+	@Override
+	public String toString() {
+		return this.quantidade + " - " + this.nome;
+	}
+
+	/**
+	 * Implementa o compareTo. Compara pela ordem alfabética.
+	 */
+	@Override
+	public int compareTo(Descritor o) {
+		return this.nome.compareTo(o.nome);
 	}
 	
 }

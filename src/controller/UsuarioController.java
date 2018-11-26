@@ -4,13 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import model.Item;
 import model.Usuario;
+import util.ComparaItem;
 
 /**
  * Implementa o Controlador de Usuarios do sistema.
@@ -128,7 +132,7 @@ public class UsuarioController {
 			throw new NoSuchElementException("Usuario nao encontrado: " + nome + ".");
 		}
 
-		return texto.substring(0, texto.length() - 3);
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 
 	}
 
@@ -333,6 +337,58 @@ public class UsuarioController {
 		}
 
 		return this.usuarios.get(idDoador).getItemDescritor(idItem);
+	}
+
+	private List<Item> getListaItens(String status) {
+		
+		List<Item> itens = new ArrayList<>();
+		
+		for(Usuario u: this.usuarios.values()) {
+			if(u.getStatus().equals(status)) {
+				itens.addAll(u.getItens());
+			}
+		}
+		
+		return itens;
+	}
+	
+	/**
+	 * Lista itens cadastrados no sistema.
+	 * 
+	 * @param status tipo de item a ser lista 'doador' ou 'receptor'
+	 * @return String contendo a listagem dos itens.
+	 */
+	public String listaItens(String status) {
+		
+		List<Item> itens = this.getListaItens(status);
+		Collections.sort(itens, new ComparaItem());
+		
+		String texto = "";
+		for(Item i : itens) {
+			texto += i.toString() + ", doador: " + this.usuarios.get(i.getDono()).getNome() + "/" + i.getDono() +  " | ";
+		}
+		
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+
+	/**
+	 *  Pesquisa itens no sistema cuja descrição contenha uma string dada.
+	 * 
+	 * @param desc descrição buscada.
+	 * @return String contendo os itens com a respectiva descrição.
+	 */
+	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
+		List<Item> itens = this.getListaItens("doador");
+		Collections.sort(itens);
+		
+		String texto = "";
+		for(Item i : itens) {
+			if(i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
+				texto += i.toString() + " | ";
+			}
+		}
+		
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
 }

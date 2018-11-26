@@ -60,11 +60,26 @@ public class Facade {
 	public void removeItemParaDoacao(String itemID, String doadorID) {
 		this.itemController.removeItemParaDoacao(itemID, doadorID);
 	}
+	
+	public String listaDescritorDeItensParaDoacao() {
+		return this.itemController.listaDescritorDeItensParaDoacao();
+	}
+	
+	public String listaItensParaDoacao() {
+		return this.itemController.listaItens("doador");
+	}
+	
+	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
+		return this.itemController.pesquisaItemParaDoacaoPorDescricao(desc);
+	}
 
 	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
-		args = new String[] {"controller.Facade", "acceptance_tests/use_case_1.txt","acceptance_tests/use_case_2.txt"};
+		args = new String[] {"controller.Facade", 
+							 "acceptance_tests/use_case_1.txt",
+							 "acceptance_tests/use_case_2.txt",
+							 "acceptance_tests/use_case_3.txt"};
 		EasyAccept.main(args);
 	}
 

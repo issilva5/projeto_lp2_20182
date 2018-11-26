@@ -62,7 +62,7 @@ public class ItemController {
 			throw new UnsupportedOperationException("Descritor de Item ja existente: " + descricao.trim().toLowerCase() + ".");
 		}
 
-		this.descritores.put(descricao, new Descritor(descricao.trim().toLowerCase(), 0));
+		this.descritores.put(descricao.trim().toLowerCase(), new Descritor(descricao.trim().toLowerCase(), 0));
 
 	}
 
@@ -101,9 +101,9 @@ public class ItemController {
 
 		}
 
-		if (!this.descritores.containsKey(descricaoItem)) {
+		if (!this.descritores.containsKey(descricaoItem.trim().toLowerCase())) {
 
-			this.descritores.put(descricaoItem, new Descritor(descricaoItem, 0));
+			this.descritores.put(descricaoItem.trim().toLowerCase(), new Descritor(descricaoItem.trim().toLowerCase(), 0));
 		}
 
 		this.numeroID++;
@@ -113,7 +113,7 @@ public class ItemController {
 		int delta = r[1];
 
 		this.descritores.get(descricaoItem).changeQuant(delta);
-
+		
 		return String.valueOf(r[0]);
 	}
 
@@ -230,6 +230,45 @@ public class ItemController {
 	 */
 	public int getDescritorQuant(String descritor) {
 		return this.descritores.get(descritor).getQuantidade();
+	}
+
+	/**
+	 * Lista os descritores que constam no sistema, bem como suas quantidades.
+	 * 
+	 * @return String contendo os descritores cadastrados.
+	 */
+	public String listaDescritorDeItensParaDoacao() {
+		String texto = "";
+		
+		for(Descritor d : this.descritores.values()) {
+			texto += d.toString() + " | ";
+		}
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+
+	/**
+	 * Lista itens cadastrados no sistema.
+	 * 
+	 * @param status tipo de item a ser lista 'doador' ou 'receptor'
+	 * @return String contendo a listagem dos itens.
+	 */
+	public String listaItens(String status) {
+		return this.usuarioController.listaItens(status);
+	}
+
+	/**
+	 * Pesquisa itens no sistema cuja descrição contenha uma string dada.
+	 * 
+	 * @param desc descrição buscada.
+	 * @return String contendo os itens com a respectiva descrição.
+	 */
+	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
+		
+		if(desc == null || desc.trim().isEmpty()) {
+			throw new IllegalArgumentException("Entrada invalida: texto da pesquisa nao pode ser vazio ou nulo.");
+		}
+		
+		return this.usuarioController.pesquisaItemParaDoacaoPorDescricao(desc);
 	}
 
 }
