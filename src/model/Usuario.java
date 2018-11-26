@@ -258,6 +258,10 @@ public class Usuario {
 	 * @return diferença entre a quantidade antiga e a nova.
 	 */
 	public int atualizaQuantidadeItem(String idItem, int quantidade) {
+		if (!this.itens.containsKey(idItem)) {
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItem + ".");
+		}
+		
 		int aux = (this.itens.get(idItem).getQuantidade() - quantidade) * (-1);
 		this.itens.get(idItem).setQuantidade(quantidade);
 		return aux;
