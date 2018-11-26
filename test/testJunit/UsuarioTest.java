@@ -121,7 +121,7 @@ class UsuarioTest {
 		assertEquals(user1.exibeItem("3"), "3 - coisas, tags: [coisa], quantidade: 30");
 
 		assertThrows(IllegalArgumentException.class, () -> user1.atualizaQuantidadeItem("3", 0));
-		assertThrows(NullPointerException.class, () -> user1.atualizaQuantidadeItem("30", 3));
+		assertThrows(UnsupportedOperationException.class, () -> user1.atualizaQuantidadeItem("30", 3));
 	}
 
 	@Test

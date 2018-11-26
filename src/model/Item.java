@@ -12,32 +12,33 @@ import java.util.List;
 public class Item {
 
 	/**
-	 * 
+	 * Identificador do item no sistema.
 	 */
 
 	private String itemID;
 
 	/**
-	 * 
+	 * Descritor do item.
 	 */
 	private String descritor;
 
 	/**
-	 * 
+	 * Quantidade do item.
 	 */
 	private int quantidade;
 
 	/**
-	 * 
+	 * Tags do item.
 	 */
 	private List<String> tags;
 
 	/**
+	 * Inicializa um item.
 	 * 
-	 * @param numeroID
-	 * @param descricaoItem
-	 * @param quantidade
-	 * @param tags
+	 * @param numeroID identificador do item.
+	 * @param descricaoItem descricao do item.
+	 * @param quantidade quantidade do item.
+	 * @param tags tags do item.
 	 */
 
 	public Item(String numeroID, String descricaoItem, int quantidade, String tags) {
@@ -67,19 +68,20 @@ public class Item {
 	}
 
 	/**
+	 * Retorna o identificador do item.
 	 * 
-	 * @return
+	 * @return identificador do item.
 	 */
-
 	public String getItemID() {
 		return this.itemID;
 	}
 
 	/**
+	 * Altera a quantidade de um item.
 	 * 
-	 * @param quantidade
+	 * @param quantidade nova quantidade.
+	 * @return Diferença entre a nova quantidade e a quatidade antiga.
 	 */
-
 	public int setQuantidade(int quantidade) {
 
 		if (quantidade <= 0) {
@@ -91,10 +93,10 @@ public class Item {
 	}
 
 	/**
+	 * Define as tags do item.
 	 * 
-	 * @param tags
+	 * @param tags tags do item.
 	 */
-
 	public void setTag(String tags) {
 		
 		if (tags == null) return;
@@ -105,29 +107,28 @@ public class Item {
 	}
 
 	/**
+	 * Retorna a quantidade do item.
 	 * 
-	 * @return
+	 * @return quantidade do item.
 	 */
-
 	public int getQuantidade() {
 
 		return this.quantidade;
 	}
 
 	/**
+	 * Retorna o descritor o item.
 	 * 
-	 * @return
+	 * @return descritor do item.
 	 */
-
 	public String getDescritor() {
 
 		return this.descritor;
 	}
 
 	/**
-	 * 
+	 * Implementa o toString.
 	 */
-
 	@Override
 	public String toString() {
 
@@ -135,10 +136,10 @@ public class Item {
 
 	}
 
-	/**
-	 * 
-	 */
 
+	/**
+	 * Implementa o hashCode.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -149,9 +150,9 @@ public class Item {
 	}
 
 	/**
-	 * 
+	 * Implementa o equals.
+	 * Dois itens são iguais se tiverem o mesmo descritor, e as mesmas tags na mesma ordem.
 	 */
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -169,10 +170,10 @@ public class Item {
 	}
 
 	/**
+	 * Retorna as tags do item.
 	 * 
-	 * @return
+	 * @return tags do item.
 	 */
-
 	public String getTag() {
 
 		return this.tags.toString();

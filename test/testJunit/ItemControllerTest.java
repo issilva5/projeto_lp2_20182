@@ -20,7 +20,7 @@ class ItemControllerTest {
 		this.uc.adicionaDoador("40028922000", "Isaias", "isaias@ccc", "40028922", "PESSOA_FISICA");
 		this.ic = new ItemController(this.uc);
 		this.ic.adicionaDescritor("fralda");
-		this.ic.adicionaItemParaDoacao("10154010408", "fralda", 10, "geriatrica,pequena");
+		this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,pequena");
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemDoadorNull() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao(null, "fralda", 10, "geriatrica,grande");
+			this.ic.adicionaItem(null, "fralda", 10, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -58,7 +58,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemDoadorVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao("  ", "fralda", 10, "geriatrica,grande");
+			this.ic.adicionaItem("  ", "fralda", 10, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -66,7 +66,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemDescritorNull() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao("10154010408", null, 10, "geriatrica,grande");
+			this.ic.adicionaItem("10154010408", null, 10, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: descricao nao pode ser vazia ou nula.");
 	}
@@ -74,7 +74,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemDescritorVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao("10154010408", "", 10, "geriatrica,grande");
+			this.ic.adicionaItem("10154010408", "", 10, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: descricao nao pode ser vazia ou nula.");
 	}
@@ -82,7 +82,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemQuantidadeZero() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao("10154010408", "fralda", 0, "geriatrica,grande");
+			this.ic.adicionaItem("10154010408", "fralda", 0, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: quantidade deve ser maior que zero.");
 	}
@@ -90,7 +90,7 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemQuantidadeNegativa() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.adicionaItemParaDoacao("10154010408", "fralda", -10, "geriatrica,grande");
+			this.ic.adicionaItem("10154010408", "fralda", -10, "geriatrica,grande");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: quantidade deve ser maior que zero.");
 	}
@@ -98,25 +98,25 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaItemTagsNull() {
 		Throwable aux = assertThrows(NullPointerException.class, () -> {
-			this.ic.adicionaItemParaDoacao("10154010408", "fralda", 10, null);
+			this.ic.adicionaItem("10154010408", "fralda", 10, null);
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: tag nao pode ser nula");
 	}
 	
 	@Test
 	public void testAdicionaItemTagsVazia() {
-		assertEquals("2", this.ic.adicionaItemParaDoacao("10154010408", "fralda", 10, ""));
+		assertEquals("2", this.ic.adicionaItem("10154010408", "fralda", 10, ""));
 	}
 	
 	@Test
 	public void testAdicionaItemDescritorInexistente() {
-		assertEquals("2", this.ic.adicionaItemParaDoacao("10154010408", "bola", 10, "ioga,idosos"));
+		assertEquals("2", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
 	}
 	
 	@Test
 	public void testAdicionaDoisItemDescritor() {
-		assertEquals("2", this.ic.adicionaItemParaDoacao("10154010408", "bola", 10, "ioga,idosos"));
-		assertEquals("3", this.ic.adicionaItemParaDoacao("10154010408", "fralda", 10, "geriatrica,grande"));
+		assertEquals("2", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
+		assertEquals("3", this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,grande"));
 		assertEquals(20, this.ic.getDescritorQuant("fralda"));
 		assertEquals(10, this.ic.getDescritorQuant("bola"));
 	}
@@ -124,15 +124,15 @@ class ItemControllerTest {
 	@Test
 	public void testAdicionaUsuarioInexistente() {
 		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
-			this.ic.adicionaItemParaDoacao("12345678911", "fralda", 10, "");
+			this.ic.adicionaItem("12345678911", "fralda", 10, "");
 		});
 		assertEquals(aux.getMessage(), "Usuario nao encontrado: 12345678911.");
 	}
 	
 	@Test
 	public void testAdicionaDoisItemDiferentesDonos() {
-		this.ic.adicionaItemParaDoacao("10154010408", "bola", 10, "ioga,idosos");
-		this.ic.adicionaItemParaDoacao("40028922000", "bola", 10, "geriatrica,grande");
+		this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos");
+		this.ic.adicionaItem("40028922000", "bola", 10, "geriatrica,grande");
 		assertEquals(20, this.ic.getDescritorQuant("bola"));
 	}
 

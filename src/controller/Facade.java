@@ -46,7 +46,7 @@ public class Facade {
 	}
 
 	public String adicionaItemParaDoacao(String doadorID, String descricaoItem, int quantidade, String tags) {
-		return this.itemController.adicionaItemParaDoacao(doadorID, descricaoItem, quantidade, tags);
+		return this.itemController.adicionaItem(doadorID, descricaoItem, quantidade, tags);
 	}
 
 	public String exibeItem(String itemID, String doadorID) {

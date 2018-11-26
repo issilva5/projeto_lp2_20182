@@ -3,9 +3,6 @@ package testJunit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 
 import controller.UsuarioController;
@@ -85,7 +82,6 @@ class UsuarioControllerTest {
 	}
 
 	@Test
-	//TODO
 	void testAtualizaUsuario() {
 		
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
@@ -127,7 +123,6 @@ class UsuarioControllerTest {
 	}
 
 	@Test
-	//TODO
 	void testAtualizaReceptores() {
 		String path = "arquivos_sistema/atualizaReceptores.csv";
 		controller.atualizaReceptores(path);
@@ -136,22 +131,22 @@ class UsuarioControllerTest {
 	@Test
 	void testAdicionaItemParaDoacao() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.adicionaItemParaDoacao(" ", "01", "roupa", 2,"guarda,roupa"));
+				() -> controller.adicionaItem(" ", "01", "roupa", 2,"guarda,roupa"));
 		assertThrows(NumberFormatException.class,
-				() -> controller.adicionaItemParaDoacao("1", " ", "roupa", 2,"guarda,roupa"));
+				() -> controller.adicionaItem("1", " ", "roupa", 2,"guarda,roupa"));
 		assertThrows(IllegalArgumentException.class,
-				() -> controller.adicionaItemParaDoacao("1", "01", " ", 2,"guarda,roupa"));
+				() -> controller.adicionaItem("1", "01", " ", 2,"guarda,roupa"));
 		assertThrows(IllegalArgumentException.class,
-				() -> controller.adicionaItemParaDoacao("1", "01", "roupa", -1,"guarda,roupa"));
+				() -> controller.adicionaItem("1", "01", "roupa", -1,"guarda,roupa"));
 	}
 
 	@Test
 	void testExibeItemParaDoacao() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
@@ -169,7 +164,7 @@ class UsuarioControllerTest {
 	void testAtualizaQuantidadeItem() {
 		
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 
 		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
@@ -189,7 +184,7 @@ class UsuarioControllerTest {
 	@Test
 	void testAtualizaTagsItem() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		controller.atualizaTagsItem("01", "1", "so,top");
 		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [so, top], quantidade: 2");
@@ -198,7 +193,7 @@ class UsuarioControllerTest {
 	@Test
 	void testRemoveItemParaDoacao() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		assertEquals(controller.removeItemParaDoacao("01", "1"),2);
 		
@@ -211,7 +206,7 @@ class UsuarioControllerTest {
 	@Test
 	void testGetItemDescritor() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
-		controller.adicionaItemParaDoacao("1", "01", "roupa", 2,"guarda,roupa");
+		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		assertEquals(controller.getItemDescritor("01", "1"),"roupa");
 		

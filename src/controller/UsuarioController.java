@@ -243,7 +243,7 @@ public class UsuarioController {
 	 * @param quantidade    quantidade do item.
 	 * @param tags          tags do item.
 	 */
-	public int[] adicionaItemParaDoacao(String idDoador, String idItem, String descricaoItem, int quantidade, String tags) {
+	public int[] adicionaItem(String idDoador, String idItem, String descricaoItem, int quantidade, String tags) {
 
 		if (!this.usuarios.containsKey(idDoador)) {
 			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");

@@ -66,19 +66,19 @@ public class ItemController {
 
 	}
 
+	
 	/**
-	 * Adiciona item para doacao
+	 * Adiciona um item para um dado usuário.
 	 * 
-	 * @param idDoador
-	 * @param descricaoItem
-	 * @param quantidade
-	 * @param tags
-	 * @return
+	 * @param idUsuario identificador do usuário.
+	 * @param descricaoItem descrição do item.
+	 * @param quantidade quantidade do item.
+	 * @param tags tags do item.
+	 * @return identificador do item.
 	 */
+	public String adicionaItem(String idUsuario, String descricaoItem, int quantidade, String tags) {
 
-	public String adicionaItemParaDoacao(String idDoador, String descricaoItem, int quantidade, String tags) {
-
-		if (idDoador == null || idDoador.trim().isEmpty()) {
+		if (idUsuario == null || idUsuario.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
@@ -108,7 +108,7 @@ public class ItemController {
 
 		this.numeroID++;
 
-		int[] r = this.usuarioController.adicionaItemParaDoacao(idDoador, "" + this.numeroID, descricaoItem, quantidade, tags);
+		int[] r = this.usuarioController.adicionaItem(idUsuario, "" + this.numeroID, descricaoItem, quantidade, tags);
 		
 		int delta = r[1];
 
@@ -194,8 +194,8 @@ public class ItemController {
 	/**
 	 * Remove item para doacao a partir do id do tem e do id do doador.
 	 * 
-	 * @param idItem
-	 * @param idDoador
+	 * @param idItem identificador do item.
+	 * @param idDoador identificador do usuário.
 	 */
 
 	public void removeItemParaDoacao(String idItem, String idDoador) {
