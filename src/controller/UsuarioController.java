@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import model.Item;
 import model.Usuario;
 import util.ComparaItem;
+import util.ComparaItemId;
 
 /**
  * Implementa o Controlador de Usuarios do sistema.
@@ -365,7 +366,7 @@ public class UsuarioController {
 		if (status.equals("doador")) {
 			Collections.sort(itens, new ComparaItem());
 		} else if (status.equals("receptor")) {
-			Collections.sort(itens);
+			Collections.sort(itens, new ComparaItemId());
 		}
 		
 		String texto = "";
