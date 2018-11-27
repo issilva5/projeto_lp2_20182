@@ -52,28 +52,30 @@ public class ItemController {
 	 */
 
 	public void adicionaDescritor(String descricao) {
-
+		
 		if (descricao == null || descricao.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: descricao nao pode ser vazia ou nula.");
 		}
-
-		if (this.descritores.containsKey(descricao.trim().toLowerCase())) {
-			throw new UnsupportedOperationException("Descritor de Item ja existente: " + descricao.trim().toLowerCase() + ".");
+		
+		descricao = descricao.trim().toLowerCase();
+		
+		if (this.descritores.containsKey(descricao)) {
+			throw new UnsupportedOperationException(
+					"Descritor de Item ja existente: " + descricao + ".");
 		}
 
-		this.descritores.put(descricao.trim().toLowerCase(), new Descritor(descricao.trim().toLowerCase(), 0));
+		this.descritores.put(descricao, new Descritor(descricao, 0));
 
 	}
 
-	
 	/**
 	 * Adiciona um item para um dado usuário.
 	 * 
-	 * @param idUsuario identificador do usuário.
+	 * @param idUsuario     identificador do usuário.
 	 * @param descricaoItem descrição do item.
-	 * @param quantidade quantidade do item.
-	 * @param tags tags do item.
+	 * @param quantidade    quantidade do item.
+	 * @param tags          tags do item.
 	 * @return identificador do item.
 	 */
 	public String adicionaItem(String idUsuario, String descricaoItem, int quantidade, String tags) {
@@ -89,6 +91,8 @@ public class ItemController {
 
 		}
 
+		descricaoItem = descricaoItem.trim().toLowerCase();
+		
 		if (quantidade <= 0) {
 
 			throw new IllegalArgumentException("Entrada invalida: quantidade deve ser maior que zero.");
@@ -101,30 +105,32 @@ public class ItemController {
 
 		}
 
-		if (!this.descritores.containsKey(descricaoItem.trim().toLowerCase())) {
+		if (!this.descritores.containsKey(descricaoItem)) {
 
-			this.descritores.put(descricaoItem.trim().toLowerCase(), new Descritor(descricaoItem.trim().toLowerCase(), 0));
+			this.descritores.put(descricaoItem,
+					new Descritor(descricaoItem, 0));
 		}
 
 		this.numeroID++;
 
 		int[] r = this.usuarioController.adicionaItem(idUsuario, "" + this.numeroID, descricaoItem, quantidade, tags);
-		
+
 		int delta = r[1];
 
 		this.descritores.get(descricaoItem).changeQuant(delta);
-		
+
 		return String.valueOf(r[0]);
+
 	}
 
 	/**
 	 * Exibe um item de um doador específico.
 	 * 
 	 * @param idItem   identificador do item a ser exibido.
-	 * @param idDoador identificador do usuário.
+	 * @param idUsuario identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
-	public String exibeItem(String idItem, String idDoador) {
+	public String exibeItem(String idItem, String idUsuario) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
 
@@ -136,13 +142,13 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		if (idDoador == null || idDoador.trim().isEmpty()) {
+		if (idUsuario == null || idUsuario.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
 		}
 
-		return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
+		return this.usuarioController.exibeItem(idItem, idUsuario);
 
 	}
 
@@ -150,25 +156,25 @@ public class ItemController {
 	 * Atualiza a quantidade ou as tags de um item de um doador.
 	 * 
 	 * @param idItem     identificador do item.
-	 * @param idDoador   identificador do doador.
+	 * @param idUsuario   identificador do doador.
 	 * @param quantidade nova quantidade do item.
 	 * @param tags       novas tags.
 	 * @return String contendo a representação do item.
 	 */
 
-	public String atualizaItemParaDoacao(String idItem, String idDoador, int quantidade, String tags) {
+	public String atualizaItem(String idItem, String idUsuario, int quantidade, String tags) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser vazia ou nula.");
 
 		}
-
-		if (Integer.parseInt(idItem) < 0) {
+		
+		if (Long.parseLong(idItem) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		if (idDoador == null || idDoador.trim().isEmpty()) {
+		if (idUsuario == null || idUsuario.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
@@ -178,27 +184,28 @@ public class ItemController {
 //			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
 //		}
 
-		if (quantidade <= 0) {
-			this.usuarioController.atualizaTagsItem(idItem, idDoador, tags);
-			return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
+		if (tags != null && !tags.trim().isEmpty())
+			this.usuarioController.atualizaTagsItem(idItem, idUsuario, tags);
+
+		if(quantidade > 0) {
+			int delta = this.usuarioController.atualizaQuantidadeItem(idItem, idUsuario, quantidade);
+			
+			String descritor = this.usuarioController.getItemDescritor(idItem, idUsuario);
+			this.descritores.get(descritor).changeQuant(delta);
 		}
 
-		int delta = this.usuarioController.atualizaQuantidadeItem(idItem, idDoador, quantidade);
-		String descritor = this.usuarioController.getItemDescritor(idItem, idDoador);
-		this.descritores.get(descritor).changeQuant(delta);
-
-		return this.usuarioController.exibeItemParaDoacao(idItem, idDoador);
+		return this.usuarioController.exibeItem(idItem, idUsuario);
 
 	}
 
 	/**
 	 * Remove item para doacao a partir do id do tem e do id do doador.
 	 * 
-	 * @param idItem identificador do item.
-	 * @param idDoador identificador do usuário.
+	 * @param idItem   identificador do item.
+	 * @param idUsuario identificador do usuário.
 	 */
 
-	public void removeItemParaDoacao(String idItem, String idDoador) {
+	public void removeItem(String idItem, String idUsuario) {
 
 		if (idItem == null || idItem.trim().isEmpty()) {
 
@@ -206,7 +213,7 @@ public class ItemController {
 
 		}
 
-		if (idDoador == null || idDoador.trim().isEmpty()) {
+		if (idUsuario == null || idUsuario.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
@@ -216,9 +223,9 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		String descritor = this.usuarioController.getItemDescritor(idItem, idDoador);
-		int delta = this.usuarioController.removeItemParaDoacao(idItem, idDoador);
-		
+		String descritor = this.usuarioController.getItemDescritor(idItem, idUsuario);
+		int delta = this.usuarioController.removeItem(idItem, idUsuario);
+
 		this.descritores.get(descritor).changeQuant(delta * -1);
 	}
 
@@ -239,8 +246,8 @@ public class ItemController {
 	 */
 	public String listaDescritorDeItensParaDoacao() {
 		String texto = "";
-		
-		for(Descritor d : this.descritores.values()) {
+
+		for (Descritor d : this.descritores.values()) {
 			texto += d.toString() + " | ";
 		}
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
@@ -263,10 +270,12 @@ public class ItemController {
 	 * @return String contendo os itens com a respectiva descrição.
 	 */
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
-		
-		if(desc == null || desc.trim().isEmpty()) {
+
+		if (desc == null || desc.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: texto da pesquisa nao pode ser vazio ou nulo.");
 		}
+
+		desc = desc.trim().toLowerCase();
 		
 		return this.usuarioController.pesquisaItemParaDoacaoPorDescricao(desc);
 	}

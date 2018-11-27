@@ -148,16 +148,16 @@ class UsuarioControllerTest {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("1", "1"));
+				() -> controller.exibeItem("1", "1"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("01", "4"));
+				() -> controller.exibeItem("01", "4"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("1", " "));
+				() -> controller.exibeItem("1", " "));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao(" ", "1"));
+				() -> controller.exibeItem(" ", "1"));
 	}
 
 	@Test
@@ -166,10 +166,10 @@ class UsuarioControllerTest {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
 		controller.atualizaQuantidadeItem("01", "1", 5);
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 5");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 5");
 		
 		assertThrows(UnsupportedOperationException.class,
 				() -> controller.atualizaQuantidadeItem(" ", "1",4));
@@ -187,20 +187,20 @@ class UsuarioControllerTest {
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		controller.atualizaTagsItem("01", "1", "so,top");
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [so, top], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [so, top], quantidade: 2");
 	}
 
 	@Test
 	void testRemoveItemParaDoacao() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
-		assertEquals(controller.removeItemParaDoacao("01", "1"),2);
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.removeItem("01", "1"),2);
 		
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.removeItemParaDoacao("01", "1"));
+				() -> controller.removeItem("01", "1"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.removeItemParaDoacao("031", "11"));
+				() -> controller.removeItem("031", "11"));
 	}
 
 	@Test

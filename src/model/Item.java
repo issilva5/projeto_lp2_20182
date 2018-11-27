@@ -113,9 +113,6 @@ public class Item implements Comparable<Item> {
 	 * @param tags tags do item.
 	 */
 	public void setTag(String tags) {
-		
-		if (tags == null) return;
-		
 		List<String> aux = new ArrayList<>();
 		aux.addAll(Arrays.asList(tags.split(",")));
 		this.tags = aux;

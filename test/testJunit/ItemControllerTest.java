@@ -200,7 +200,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemIdNulo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.atualizaItemParaDoacao(null, "4002892200", 10, "");
+			this.ic.atualizaItem(null, "4002892200", 10, "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser vazia ou nula.");
 	}
@@ -208,7 +208,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemIdVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.atualizaItemParaDoacao("", "4002892200", 10, "");
+			this.ic.atualizaItem("", "4002892200", 10, "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser vazia ou nula.");
 	}
@@ -216,7 +216,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemIdNegativo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.atualizaItemParaDoacao("-4", "4002892200", 10, "");
+			this.ic.atualizaItem("-4", "4002892200", 10, "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser negativo.");
 	}
@@ -224,7 +224,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemIdDoadorNulo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.atualizaItemParaDoacao("1", null, 10, "");
+			this.ic.atualizaItem("1", null, 10, "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -232,7 +232,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemIdDoadorVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.atualizaItemParaDoacao("1", "   ", 10, "");
+			this.ic.atualizaItem("1", "   ", 10, "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -240,7 +240,7 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemUsuarioInexistente() {
 		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
-			this.ic.atualizaItemParaDoacao("1", "123456789", 0, "");
+			this.ic.atualizaItem("1", "123456789", 0, "");
 		});
 		assertEquals(aux.getMessage(), "Usuario nao encontrado: 123456789.");
 	}
@@ -248,33 +248,33 @@ class ItemControllerTest {
 	@Test
 	public void testAtualizaItemItemInexistente() {
 		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
-			this.ic.atualizaItemParaDoacao("2", "10154010408", 0, "huge");
+			this.ic.atualizaItem("2", "10154010408", 0, "huge");
 		});
 		assertEquals(aux.getMessage(), "Item nao encontrado: 2.");
 	}
 	
 	@Test
 	public void testAtualizaItemParaDoacaoTags() {
-		this.ic.atualizaItemParaDoacao("1", "10154010408", 0, "");
+		this.ic.atualizaItem("1", "10154010408", 0, "");
 		assertEquals("1 - fralda, tags: [], quantidade: 10", this.ic.exibeItem("1", "10154010408"));
 	}
 	
 	@Test
 	public void testAtualizaItemParaDoacaoTags2() {
-		this.ic.atualizaItemParaDoacao("1", "10154010408", 0, "pequena");
+		this.ic.atualizaItem("1", "10154010408", 0, "pequena");
 		assertEquals("1 - fralda, tags: [pequena], quantidade: 10", this.ic.exibeItem("1", "10154010408"));
 	}
 	
 	@Test
 	public void testAtualizaItemParaDoacaoQuantidadeMaior() {
-		this.ic.atualizaItemParaDoacao("1", "10154010408", 15, "");
+		this.ic.atualizaItem("1", "10154010408", 15, "");
 		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 15", this.ic.exibeItem("1", "10154010408"));
 		assertEquals(15, this.ic.getDescritorQuant("fralda"));
 	}
 	
 	@Test
 	public void testAtualizaItemParaDoacaoQuantidadeMenor() {
-		this.ic.atualizaItemParaDoacao("1", "10154010408", 5, "");
+		this.ic.atualizaItem("1", "10154010408", 5, "");
 		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 5", this.ic.exibeItem("1", "10154010408"));
 		assertEquals(5, this.ic.getDescritorQuant("fralda"));
 	}
@@ -282,7 +282,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemIdNulo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.removeItemParaDoacao(null, "10154010408");
+			this.ic.removeItem(null, "10154010408");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser vazia ou nula.");
 	}
@@ -290,7 +290,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemIdVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.removeItemParaDoacao("   ", "10154010408");
+			this.ic.removeItem("   ", "10154010408");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser vazia ou nula.");
 	}
@@ -298,7 +298,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemIdNegativo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.removeItemParaDoacao("-1", "10154010408");
+			this.ic.removeItem("-1", "10154010408");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do item nao pode ser negativo.");
 	}
@@ -306,7 +306,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemIdDoadorNulo() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.removeItemParaDoacao("1", null);
+			this.ic.removeItem("1", null);
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -314,7 +314,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemIdDoadorVazio() {
 		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
-			this.ic.removeItemParaDoacao("1", "");
+			this.ic.removeItem("1", "");
 		});
 		assertEquals(aux.getMessage(), "Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 	}
@@ -322,7 +322,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemUsuarioInexistente() {
 		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
-			this.ic.removeItemParaDoacao("1", "123456789");
+			this.ic.removeItem("1", "123456789");
 		});
 		assertEquals(aux.getMessage(), "Usuario nao encontrado: 123456789.");
 	}
@@ -330,7 +330,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemItemInexistente() {
 		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
-			this.ic.removeItemParaDoacao("2", "10154010408");
+			this.ic.removeItem("2", "10154010408");
 		});
 		assertEquals(aux.getMessage(), "Item nao encontrado: 2.");
 	}
@@ -338,7 +338,7 @@ class ItemControllerTest {
 	@Test
 	public void testRemoveItemParaDoacao() {
 		assertEquals(10, this.ic.getDescritorQuant("fralda"));
-		this.ic.removeItemParaDoacao("1", "10154010408");
+		this.ic.removeItem("1", "10154010408");
 		assertEquals(0, this.ic.getDescritorQuant("fralda"));
 	}
 

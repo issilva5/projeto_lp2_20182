@@ -277,7 +277,7 @@ public class Usuario {
 	public void atualizaTagsItem(String itemID, String tags) {
 		
 		if (!this.itens.containsKey(itemID)) {
-
+			
 			throw new UnsupportedOperationException("Item nao encontrado: " + itemID + ".");
 
 		}

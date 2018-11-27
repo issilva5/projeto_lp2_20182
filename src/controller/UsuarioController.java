@@ -241,52 +241,52 @@ public class UsuarioController {
 	/**
 	 * Adiciona um item para doação em um usuário doador.
 	 * 
-	 * @param idDoador      identificador do usuário a ter item associado.
+	 * @param idUsuario      identificador do usuário a ter item associado.
 	 * @param idItem        identificador do item a ser associado.
 	 * @param descricaoItem descritor do item.
 	 * @param quantidade    quantidade do item.
 	 * @param tags          tags do item.
 	 */
-	public int[] adicionaItem(String idDoador, String idItem, String descricaoItem, int quantidade, String tags) {
+	public int[] adicionaItem(String idUsuario, String idItem, String descricaoItem, int quantidade, String tags) {
 
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		return this.usuarios.get(idDoador).adicionaItem(idItem, descricaoItem, quantidade, tags);
+		return this.usuarios.get(idUsuario).adicionaItem(idItem, descricaoItem, quantidade, tags);
 	}
 
 	/**
 	 * Exibe um item de um doador específico.
 	 * 
 	 * @param idItem   identificador do item a ser exibido.
-	 * @param idDoador identificador do usuário.
+	 * @param idUsuario identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
-	public String exibeItemParaDoacao(String idItem, String idDoador) {
+	public String exibeItem(String idItem, String idUsuario) {
 
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		return this.usuarios.get(idDoador).exibeItem(idItem);
+		return this.usuarios.get(idUsuario).exibeItem(idItem);
 	}
 
 	/**
 	 * Atualiza a quantidade de um item de um dado usuário doador.
 	 * 
 	 * @param idItem     identificador do item.
-	 * @param idDoador   identificador do usuário.
+	 * @param idUsuario   identificador do usuário.
 	 * @param quantidade novo quantidade do item.
 	 * @return diferença entre a quantidade antiga e nova.
 	 */
-	public int atualizaQuantidadeItem(String idItem, String idDoador, int quantidade) {
+	public int atualizaQuantidadeItem(String idItem, String idUsuario, int quantidade) {
 
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		return this.usuarios.get(idDoador).atualizaQuantidadeItem(idItem, quantidade);
+		return this.usuarios.get(idUsuario).atualizaQuantidadeItem(idItem, quantidade);
 
 	}
 
@@ -294,32 +294,31 @@ public class UsuarioController {
 	 * Atualiza as tags de um item de um dado usuário doador.
 	 * 
 	 * @param idItem   identificador do item.
-	 * @param idDoador identificador do usuário.
+	 * @param idUsuario identificador do usuário.
 	 * @param tags     novas tagas do item.
 	 */
-	public void atualizaTagsItem(String idItem, String idDoador, String tags) {
-
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+	public void atualizaTagsItem(String idItem, String idUsuario, String tags) {
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		this.usuarios.get(idDoador).atualizaTagsItem(idItem, tags);
+		this.usuarios.get(idUsuario).atualizaTagsItem(idItem, tags);
 	}
 
 	/**
 	 * Remove um item de um usuário doador.
 	 * 
 	 * @param idItem   identificador do item.
-	 * @param idDoador identificador do usuário.
+	 * @param idUsuario identificador do usuário.
 	 * @return quantidade que o item tinha ao ser removido.
 	 */
-	public int removeItemParaDoacao(String idItem, String idDoador) {
+	public int removeItem(String idItem, String idUsuario) {
 
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		return this.usuarios.get(idDoador).removeItem(idItem);
+		return this.usuarios.get(idUsuario).removeItem(idItem);
 
 	}
 
@@ -327,31 +326,31 @@ public class UsuarioController {
 	 * Pega o descritor de um item de um usuário doador.
 	 * 
 	 * @param idItem   identificador do item.
-	 * @param idDoador identificador do usuário.
+	 * @param idUsuario identificador do usuário.
 	 * @return descritor do item.
 	 */
-	public String getItemDescritor(String idItem, String idDoador) {
+	public String getItemDescritor(String idItem, String idUsuario) {
 
-		if (!this.usuarios.containsKey(idDoador)) {
-			throw new UnsupportedOperationException("Usuario nao encontrado: " + idDoador + ".");
+		if (!this.usuarios.containsKey(idUsuario)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idUsuario + ".");
 		}
 
-		return this.usuarios.get(idDoador).getItemDescritor(idItem);
+		return this.usuarios.get(idUsuario).getItemDescritor(idItem);
 	}
 
 	private List<Item> getListaItens(String status) {
-		
+
 		List<Item> itens = new ArrayList<>();
-		
-		for(Usuario u: this.usuarios.values()) {
-			if(u.getStatus().equals(status)) {
+
+		for (Usuario u : this.usuarios.values()) {
+			if (u.getStatus().equals(status)) {
 				itens.addAll(u.getItens());
 			}
 		}
-		
+
 		return itens;
 	}
-	
+
 	/**
 	 * Lista itens cadastrados no sistema.
 	 * 
@@ -359,20 +358,32 @@ public class UsuarioController {
 	 * @return String contendo a listagem dos itens.
 	 */
 	public String listaItens(String status) {
-		
+
 		List<Item> itens = this.getListaItens(status);
-		Collections.sort(itens, new ComparaItem());
 		
-		String texto = "";
-		for(Item i : itens) {
-			texto += i.toString() + ", doador: " + this.usuarios.get(i.getDono()).getNome() + "/" + i.getDono() +  " | ";
+		
+		if (status.equals("doador")) {
+			Collections.sort(itens, new ComparaItem());
+		} else if (status.equals("receptor")) {
+			Collections.sort(itens);
 		}
 		
+		String texto = "";
+		for (Item i : itens) {
+			if (status.equals("doador")) {
+				texto += i.toString() + ", doador: " + this.usuarios.get(i.getDono()).getNome() + "/" + i.getDono()
+						+ " | ";
+			} else if (status.equals("receptor")) {
+				texto += i.toString() + ", Receptor: " + this.usuarios.get(i.getDono()).getNome() + "/" + i.getDono()
+						+ " | ";
+			}
+		}
+
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
 	/**
-	 *  Pesquisa itens no sistema cuja descrição contenha uma string dada.
+	 * Pesquisa itens no sistema cuja descrição contenha uma string dada.
 	 * 
 	 * @param desc descrição buscada.
 	 * @return String contendo os itens com a respectiva descrição.
@@ -380,14 +391,14 @@ public class UsuarioController {
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
 		List<Item> itens = this.getListaItens("doador");
 		Collections.sort(itens);
-		
+
 		String texto = "";
-		for(Item i : itens) {
-			if(i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
+		for (Item i : itens) {
+			if (i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
 				texto += i.toString() + " | ";
 			}
 		}
-		
+
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
