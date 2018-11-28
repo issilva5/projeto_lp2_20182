@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Representacao de um Usuario
+ * Representacao de um usuario no sistema
  */
 @SuppressWarnings("unused")
 public class Usuario {
@@ -52,7 +52,7 @@ public class Usuario {
 
 	/**
 	 * 
-	 * Construir um usuario a partir do nome,email, documento de identificao,
+	 * Constroi um usuario a partir do nome,email, documento de identificao,
 	 * celular e o status do usuario. O status do usuario pode ser 'receptor' ou
 	 * 'doador'.
 	 * 

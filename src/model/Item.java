@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 
- * Representacao de um Item
+ * Representacao de um item no sistema
  *
  */
 public class Item implements Comparable<Item> {
