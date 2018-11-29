@@ -81,5 +81,16 @@ class DescritorTest {
 		Descritor e = new Descritor("cadeira", 15);
 		assertNotEquals(e, this.d);
 	}
+	
+	@Test
+	void testCompareTo() {
+		Descritor e = new Descritor("cadeira", 15);
+		assertTrue(e.compareTo(this.d) < 0);
+	}
+	
+	@Test
+	void testToString() {
+		assertEquals("15 - fralda", this.d.toString());
+	}
 
 }

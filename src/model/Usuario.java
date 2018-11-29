@@ -1,12 +1,13 @@
 package model;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Representacao de um Usuario
+ * Representacao de um usuario no sistema
  */
 @SuppressWarnings("unused")
 public class Usuario {
@@ -51,7 +52,7 @@ public class Usuario {
 
 	/**
 	 * 
-	 * Construir um usuario a partir do nome,email, documento de identificao,
+	 * Constroi um usuario a partir do nome,email, documento de identificao,
 	 * celular e o status do usuario. O status do usuario pode ser 'receptor' ou
 	 * 'doador'.
 	 * 
@@ -206,7 +207,7 @@ public class Usuario {
 	 */
 	public int[] adicionaItem(String numeroID, String descricaoItem, int quantidade, String tags) {
 		
-		Item i = new Item(numeroID, descricaoItem, quantidade, tags);
+		Item i = new Item(numeroID, descricaoItem, quantidade, tags, this.docID);
 		
 		for(String aux : this.itens.keySet()) {
 			if(i.equals(this.itens.get(aux))) {
@@ -214,7 +215,7 @@ public class Usuario {
 				int d = this.itens.get(aux).getQuantidade();
 				this.itens.remove(aux);
 				
-				i = new Item(numAux, descricaoItem, quantidade, tags);
+				i = new Item(numAux, descricaoItem, quantidade, tags, this.docID);
 				
 				this.itens.put(numAux, i);
 				
@@ -276,7 +277,7 @@ public class Usuario {
 	public void atualizaTagsItem(String itemID, String tags) {
 		
 		if (!this.itens.containsKey(itemID)) {
-
+			
 			throw new UnsupportedOperationException("Item nao encontrado: " + itemID + ".");
 
 		}
@@ -344,6 +345,24 @@ public class Usuario {
 
 		return this.itens.get(itemID).getDescritor();
 
+	}
+
+	/**
+	 * Retorna o status do usuário.
+	 * 
+	 * @return status do usuário.
+	 */
+	public String getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * Retorna os itens do usuário.
+	 * 
+	 * @return itens do usuário.
+	 */
+	public Collection<Item> getItens() {
+		return this.itens.values();
 	}
 
 }

@@ -1,8 +1,10 @@
 package testJunit;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import controller.UsuarioController;
@@ -10,6 +12,15 @@ import controller.UsuarioController;
 class UsuarioControllerTest {
 
 	UsuarioController controller = new UsuarioController();
+	
+	@BeforeEach
+	public void setUp() {
+		
+		this.controller.adicionaDoador("12345678910", "Ariel", "ariel@ccc", "992484833", "PESSOA_FISICA");
+		this.controller.adicionaDoador("10154010408", "Itallo", "itallo@ccc", "81792479", "PESSOA_FISICA");
+		this.controller.adicionaItem("10154010408","1", "fralda", 10, "geriatrica,pequena");
+		
+	}
 	
 	@Test
 	void testAdicionaDoador() {
@@ -148,16 +159,16 @@ class UsuarioControllerTest {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("1", "1"));
+				() -> controller.exibeItem("1", "1"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("01", "4"));
+				() -> controller.exibeItem("01", "4"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao("1", " "));
+				() -> controller.exibeItem("1", " "));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.exibeItemParaDoacao(" ", "1"));
+				() -> controller.exibeItem(" ", "1"));
 	}
 
 	@Test
@@ -166,10 +177,10 @@ class UsuarioControllerTest {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
 		
 		controller.atualizaQuantidadeItem("01", "1", 5);
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 5");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 5");
 		
 		assertThrows(UnsupportedOperationException.class,
 				() -> controller.atualizaQuantidadeItem(" ", "1",4));
@@ -187,20 +198,20 @@ class UsuarioControllerTest {
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
 		
 		controller.atualizaTagsItem("01", "1", "so,top");
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [so, top], quantidade: 2");
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [so, top], quantidade: 2");
 	}
 
 	@Test
 	void testRemoveItemParaDoacao() {
 		controller.adicionaDoador("1", "nome1","celular", "email", "PESSOA_FISICA");		
 		controller.adicionaItem("1", "01", "roupa", 2,"guarda,roupa");
-		assertEquals(controller.exibeItemParaDoacao("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
-		assertEquals(controller.removeItemParaDoacao("01", "1"),2);
+		assertEquals(controller.exibeItem("01", "1"),"01 - roupa, tags: [guarda, roupa], quantidade: 2");
+		assertEquals(controller.removeItem("01", "1"),2);
 		
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.removeItemParaDoacao("01", "1"));
+				() -> controller.removeItem("01", "1"));
 		assertThrows(UnsupportedOperationException.class,
-				() -> controller.removeItemParaDoacao("031", "11"));
+				() -> controller.removeItem("031", "11"));
 	}
 
 	@Test
@@ -216,5 +227,63 @@ class UsuarioControllerTest {
 				() -> controller.getItemDescritor("01", "41"));
 		
 	}
+	
+	@Test
+	public void testListaItensParaDoacaoComQuantidadeIgual() {
+
+		this.controller.adicionaItem("12345678910","2","cobertor", 10, "lã,grande");
+
+		assertEquals(
+				"2 - cobertor, tags: [lã, grande], quantidade: 10, doador: Ariel/12345678910 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408",
+				this.controller.listaItens("doador"));
+	}
+
+	@Test
+	public void testListaItensParaDoacao() {
+
+		this.controller.adicionaItem("12345678910","2", "cobertor", 2, "lã,pequeno");
+
+		assertEquals(
+				"1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408 | 2 - cobertor, tags: [lã, pequeno], quantidade: 2, doador: Ariel/12345678910",
+				this.controller.listaItens("doador"));
+	}
+
+	@Test
+	public void testPesquisaItemParaDoacaoPorDescricaoNula() {
+
+		assertThrows(NullPointerException.class, () -> {
+			this.controller.pesquisaItemParaDoacaoPorDescricao(null);
+
+		});
+	}
+	
+	@Test
+	public void testPesquisaItemParaDoacaoPorDescricaoInexistente() {
+
+		assertEquals("",this.controller.pesquisaItemParaDoacaoPorDescricao("cobertor"));
+	}
+	
+	@Test
+	public void testPesquisaItemParaDoacaoPorDescricaoUpperCase() {
+
+		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.controller.pesquisaItemParaDoacaoPorDescricao("FRALDA"));
+	}
+	
+	@Test
+	public void testPesquisaItemParaDoacaoPorDescricaoUpperLowerCase() {
+
+		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.controller.pesquisaItemParaDoacaoPorDescricao("Fralda"));
+	}
+	
+	
+	@Test
+	public void testPesquisaItemParaDoacaoPorDescricao() {
+          
+		this.controller.adicionaItem("12345678910","2", "fralda", 2, "bebe,pequena");
+		
+		assertEquals("2 - fralda, tags: [bebe, pequena], quantidade: 2 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.controller.pesquisaItemParaDoacaoPorDescricao("fralda"));
+	}
+	
+	
 
 }

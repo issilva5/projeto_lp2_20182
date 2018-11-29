@@ -54,17 +54,52 @@ public class Facade {
 	}
 
 	public String atualizaItemParaDoacao(String itemID, String doadorID, int quantidade, String tags) {
-		return this.itemController.atualizaItemParaDoacao(itemID, doadorID, quantidade, tags);
+		return this.itemController.atualizaItem(itemID, doadorID, quantidade, tags);
 	}
 
 	public void removeItemParaDoacao(String itemID, String doadorID) {
-		this.itemController.removeItemParaDoacao(itemID, doadorID);
+		this.itemController.removeItem(itemID, doadorID);
+	}
+	
+	public String listaDescritorDeItensParaDoacao() {
+		return this.itemController.listaDescritorDeItensParaDoacao();
+	}
+	
+	public String listaItensParaDoacao() {
+		return this.itemController.listaItens("doador");
+	}
+	
+	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
+		return this.itemController.pesquisaItemParaDoacaoPorDescricao(desc);
 	}
 
+	//US4
+	
+	public String adicionaItemNecessario(String idReceptor, String descricaoItem, int quantidade, String tags) {
+		return this.itemController.adicionaItem(idReceptor, descricaoItem, quantidade, tags);
+	}
+	
+	public String listaItensNecessarios() {
+		return this.itemController.listaItens("receptor");
+	}
+	
+	public String atualizaItemNecessario(String idReceptor, String idItem, int quantidade,String tags) {
+		return this.itemController.atualizaItem(idItem, idReceptor, quantidade, tags);
+	}
+	
+	public void removeItemNecessario(String idReceptor, String idItem) {
+		this.itemController.removeItem(idItem, idReceptor);
+	}
+	
+	
 	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
-		args = new String[] {"controller.Facade", "acceptance_tests/use_case_1.txt","acceptance_tests/use_case_2.txt"};
+		args = new String[] {"controller.Facade", 
+							 "acceptance_tests/use_case_1.txt",
+							 "acceptance_tests/use_case_2.txt",
+							 "acceptance_tests/use_case_3.txt",
+							 "acceptance_tests/use_case_4.txt"};
 		EasyAccept.main(args);
 	}
 

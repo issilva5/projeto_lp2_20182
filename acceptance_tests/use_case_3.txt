@@ -18,7 +18,6 @@ expect ${idItem6}" - camiseta, tags: [outfit, algodao], quantidade: 25, doador: 
  | "${idItem11}" - calca jeans, tags: [], quantidade: 3, doador: Arthur Morgan/52641947613\
  | "${idItem1}" - cadeira de rodas, tags: [roda grande, cadeira], quantidade: 2, doador: Claudio Campelo/58791093499" listaItensParaDoacao
  
- 
 ## Pesquisando itens ##
 
 expect ${idItem8}" - cadeira de alimentacao, tags: [35kg, infantil], quantidade: 5\
