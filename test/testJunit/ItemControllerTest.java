@@ -368,6 +368,25 @@ class ItemControllerTest {
 				"1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408 | 2 - cobertor, tags: [lã, pequeno], quantidade: 2, doador: Ariel/12345678910",
 				this.ic.listaItens("doador"));
 	}
+	
+	@Test
+	public void testListaItensNecessariosVazio() {
+		
+		assertEquals("",this.ic.listaItens("receptor"));
+	}
+	
+	@Test
+	public void testListaItensNecessarios() {
+		
+		this.uc.atualizaReceptores("arquivos_sistema/novosReceptores.csv");
+		
+		this.ic.adicionaItem("80643201009", "fralda", 2, "bebe,pequena");
+		
+		this.ic.adicionaItem("58090077080", "cobertor", 10, "la,grande");
+		
+		assertEquals("2 - fralda, tags: [bebe, pequena], quantidade: 2, Receptor: Tomas Otavio Lucas Teixeira/80643201009 | 3 - cobertor, tags: [la, grande], quantidade: 10, Receptor: Isabelly Alice Bernardes/58090077080",this.ic.listaItens("receptor"));
+	}
+
 
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoVazia() {
