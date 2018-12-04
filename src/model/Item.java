@@ -190,6 +190,15 @@ public class Item implements Comparable<Item> {
 
 		return this.tags.toString();
 	}
+	
+
+	/**
+	 * Retorna a lista de tags do item.
+	 * @return lista de tags do item.
+	 */
+	public List<String> getTags() {
+		return tags;
+	}
 
 	/**
 	 * Implementa o compareTo. Pela ordem alfabética do descritor.

@@ -364,5 +364,15 @@ public class Usuario {
 	public Collection<Item> getItens() {
 		return this.itens.values();
 	}
+	
+	/**
+	 * Retorna a lista de tags de um item
+	 * @param idItem id do item
+	 * @return lista de tags
+	 */
+
+	public List<String> getTagsItem(String idItem) {
+		return this.itens.get(idItem).getTags();
+	}
 
 }

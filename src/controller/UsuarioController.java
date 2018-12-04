@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeMap;
 
 import model.Item;
 import model.Usuario;
@@ -242,7 +244,7 @@ public class UsuarioController {
 	/**
 	 * Adiciona um item para doação em um usuário doador.
 	 * 
-	 * @param idUsuario      identificador do usuário a ter item associado.
+	 * @param idUsuario     identificador do usuário a ter item associado.
 	 * @param idItem        identificador do item a ser associado.
 	 * @param descricaoItem descritor do item.
 	 * @param quantidade    quantidade do item.
@@ -260,7 +262,7 @@ public class UsuarioController {
 	/**
 	 * Exibe um item de um doador específico.
 	 * 
-	 * @param idItem   identificador do item a ser exibido.
+	 * @param idItem    identificador do item a ser exibido.
 	 * @param idUsuario identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
@@ -277,7 +279,7 @@ public class UsuarioController {
 	 * Atualiza a quantidade de um item de um dado usuário doador.
 	 * 
 	 * @param idItem     identificador do item.
-	 * @param idUsuario   identificador do usuário.
+	 * @param idUsuario  identificador do usuário.
 	 * @param quantidade novo quantidade do item.
 	 * @return diferença entre a quantidade antiga e nova.
 	 */
@@ -294,9 +296,9 @@ public class UsuarioController {
 	/**
 	 * Atualiza as tags de um item de um dado usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
-	 * @param tags     novas tagas do item.
+	 * @param tags      novas tagas do item.
 	 */
 	public void atualizaTagsItem(String idItem, String idUsuario, String tags) {
 		if (!this.usuarios.containsKey(idUsuario)) {
@@ -309,7 +311,7 @@ public class UsuarioController {
 	/**
 	 * Remove um item de um usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
 	 * @return quantidade que o item tinha ao ser removido.
 	 */
@@ -326,7 +328,7 @@ public class UsuarioController {
 	/**
 	 * Pega o descritor de um item de um usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
 	 * @return descritor do item.
 	 */
@@ -361,14 +363,13 @@ public class UsuarioController {
 	public String listaItens(String status) {
 
 		List<Item> itens = this.getListaItens(status);
-		
-		
+
 		if (status.equals("doador")) {
 			Collections.sort(itens, new ComparaItem());
 		} else if (status.equals("receptor")) {
 			Collections.sort(itens, new ComparaItemId());
 		}
-		
+
 		String texto = "";
 		for (Item i : itens) {
 			if (status.equals("doador")) {
@@ -390,17 +391,150 @@ public class UsuarioController {
 	 * @return String contendo os itens com a respectiva descrição.
 	 */
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
-		List<Item> itens = this.getListaItens("doador");
-		Collections.sort(itens);
+
+		List<Item> itens = getItensParaDoacaoPorDescricao(desc);
 
 		String texto = "";
 		for (Item i : itens) {
-			if (i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
-				texto += i.toString() + " | ";
-			}
+
+			texto += i.toString() + " | ";
+
 		}
 
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+
+	public String match(String idReceptor, String idItemNecessario) {
+
+		if (!this.usuarios.containsKey(idReceptor)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idReceptor + ".");
+		}
+
+		if (this.usuarios.get(idReceptor).getStatus().equals("doador")) {
+			throw new UnsupportedOperationException("O Usuario deve ser um receptor: " + idReceptor + ".");
+		}
+
+		if (!this.usuarios.get(idReceptor).existeItem(idItemNecessario)) {
+
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
+
+		}
+
+		Map<Integer, List<Item>> itensPontuados = pontuaItens(idReceptor, idItemNecessario);
+
+		String itensMatch = "";
+
+		for (List<Item> itens : itensPontuados.values()) {
+
+			if (itens.size() == 1) {
+				itensMatch += itens.get(0).toString() + ", doador: "
+						+ this.usuarios.get(itens.get(0).getDono()).getNome() + "/" + itens.get(0).getDono() + " | ";
+			}
+
+			else {
+
+				Collections.sort(itens, new ComparaItemId());
+
+				for (int x = 0; x < itens.size(); x++) {
+
+					itensMatch += itens.get(x).toString() + ", doador: "
+							+ this.usuarios.get(itens.get(x).getDono()).getNome() + "/" + itens.get(x).getDono()
+							+ " | ";
+
+				}
+
+			}
+
+		}
+
+		return itensMatch.length() == 0 ? "" : itensMatch.substring(0, itensMatch.length() - 3);
+
+	}
+
+	private Map<Integer, List<Item>> pontuaItens(String idReceptor, String idItemNecessario) {
+
+		String descItemNecessario = this.getItemDescritor(idItemNecessario, idReceptor);
+
+		List<String> tagsItemNecessario = this.getTagsItem(idReceptor, idItemNecessario);
+
+		List<Item> itensMatch = this.getItensParaDoacaoPorDescricao(descItemNecessario);
+
+		Map<Integer, List<Item>> itensPontuados = new TreeMap<>(Collections.reverseOrder());
+
+		for (Item i : itensMatch) {
+
+			List<String> tagsItemDoado = i.getTags();
+
+			int pontuacao = 20;
+
+			for (int x = 0; x < tagsItemNecessario.size(); x++) {
+
+				if (tagsItemDoado.contains(tagsItemNecessario.get(x).toLowerCase())
+						&& tagsItemDoado.get(x).toLowerCase().equals(tagsItemNecessario.get(x).toLowerCase())) {
+
+					pontuacao += 10;
+
+				}
+
+				else if (tagsItemDoado.contains(tagsItemNecessario.get(x).toLowerCase())) {
+
+					pontuacao += 5;
+
+				}
+			}
+
+			if (itensPontuados.containsKey(pontuacao)) {
+				itensPontuados.get(pontuacao).add(i);
+			}
+
+			else {
+
+				List<Item> itens = new ArrayList<>();
+				itens.add(i);
+				itensPontuados.put(pontuacao, itens);
+
+			}
+		}
+
+		return itensPontuados;
+	}
+
+	/**
+	 * 
+	 * @param idReceptor
+	 * @param idItemNecessario
+	 * @return
+	 */
+
+	private List<String> getTagsItem(String idReceptor, String idItemNecessario) {
+
+		return this.usuarios.get(idReceptor).getTagsItem(idItemNecessario);
+	}
+
+	/**
+	 * 
+	 * @param desc
+	 * @return
+	 */
+
+	private List<Item> getItensParaDoacaoPorDescricao(String desc) {
+
+		List<Item> itens = this.getListaItens("doador");
+		Collections.sort(itens);
+
+		List<Item> itensEncontrados = new ArrayList<>();
+
+		for (Item i : itens) {
+
+			if (i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
+
+				itensEncontrados.add(i);
+			}
+
+		}
+
+		return itensEncontrados;
+
 	}
 
 }
