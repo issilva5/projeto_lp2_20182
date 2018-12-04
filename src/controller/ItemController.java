@@ -1,9 +1,9 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import model.Item;
 
 import model.Descritor;
 
@@ -26,6 +26,8 @@ public class ItemController {
 	 */
 
 	private UsuarioController usuarioController;
+	
+	private List<String> registro;
 
 	/**
 	 * numero de identificacao disponível para ser alocado ao item
@@ -44,6 +46,7 @@ public class ItemController {
 		this.descritores = new TreeMap<>();
 		this.usuarioController = usuarioController;
 		this.numeroID = 0;
+		this.registro = new ArrayList<>();
 	}
 
 	/**
@@ -287,6 +290,7 @@ public class ItemController {
 	 * @return
 	 */
 
+	// TESTE
 	public String match(String idReceptor, String idItemNecessario) {
 
 		if (idReceptor == null || idReceptor.isEmpty()) {
@@ -304,5 +308,33 @@ public class ItemController {
 		return this.usuarioController.match(idReceptor, idItemNecessario);
 
 	}
+
+	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+
+		if (Integer.parseInt(idItemNecessario) < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+		if (Integer.parseInt(idItemDoado) < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+
+		if (data == null || data.isEmpty()) {
+			throw new IllegalArgumentException("Entrada invalida: data nao pode ser vazia ou nula.");
+		}
+
+		String[] vetor = this.usuarioController.realizaDoacao(idItemNecessario, idItemDoado, data);
+		
+		this.descritores.get(vetor[0]).changeQuant(Integer.parseInt(vetor[1]));
+		
+		this.registro.add(vetor[2]);
+		
+		return vetor[2];
+		
+
+	}
+	
+	
+	
+	
 
 }

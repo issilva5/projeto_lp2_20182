@@ -6,8 +6,9 @@ import easyaccept.EasyAccept;
 
 public class Facade {
 
-	UsuarioController usuarioController = new UsuarioController();
-	ItemController itemController = new ItemController(usuarioController);
+	
+	private UsuarioController usuarioController = new UsuarioController();
+	private ItemController itemController = new ItemController(usuarioController);
 
 	// Controller Usuario
 
@@ -97,6 +98,11 @@ public class Facade {
 		return this.itemController.match(idReceptor, idItemNecessario);
 	}
 	
+	//US6
+	
+	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+		return this.itemController.realizaDoacao(idItemNecessario,idItemDoado,data);
+	}
 	
 	// TESTES DE ACEITAÇÃO
 
@@ -106,7 +112,8 @@ public class Facade {
 							 "acceptance_tests/use_case_2.txt",
 							 "acceptance_tests/use_case_3.txt",
 							 "acceptance_tests/use_case_4.txt",
-							 "acceptance_tests/use_case_5.txt"};
+							 "acceptance_tests/use_case_5.txt",
+							 "acceptance_tests/use_case_6.txt"};
 		EasyAccept.main(args);
 	}
 

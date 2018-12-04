@@ -375,4 +375,11 @@ public class Usuario {
 		return this.itens.get(idItem).getTags();
 	}
 
+	public Item getItemId(String idItem) {
+		if(!this.itens.containsKey(idItem)) {
+			return null; 
+		}
+		return this.itens.get(idItem);
+	}
+
 }

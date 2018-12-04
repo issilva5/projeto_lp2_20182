@@ -106,6 +106,12 @@ public class Item implements Comparable<Item> {
 		this.quantidade = quantidade;
 		return aux;
 	}
+	
+	public int setQuantidadeDoBem(int quantidade) {
+		int aux = quantidade - this.quantidade;
+		this.quantidade = quantidade;
+		return aux;
+	}
 
 	/**
 	 * Define as tags do item.

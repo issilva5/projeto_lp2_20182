@@ -404,6 +404,7 @@ public class UsuarioController {
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
+	// TESTE
 	public String match(String idReceptor, String idItemNecessario) {
 
 		if (!this.usuarios.containsKey(idReceptor)) {
@@ -535,6 +536,69 @@ public class UsuarioController {
 
 		return itensEncontrados;
 
+	}
+
+	public String[] realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+		Usuario usuarioReceptor = null;
+		Usuario usuarioDoador = null;
+		Item itemNecessario = null;
+		Item itemDoador = null;
+
+		for (Usuario u : this.usuarios.values()) {
+			if (u.getStatus().equals("receptor")) {
+				if (u.getItemId(idItemNecessario) != null) {
+					itemNecessario = u.getItemId(idItemNecessario);
+					usuarioReceptor = u;
+				}
+
+			} else if (u.getStatus().equals("doador")) {
+				if (u.getItemId(idItemDoado) != null) {
+					itemDoador = u.getItemId(idItemDoado);
+					usuarioDoador = u;
+				}
+			}
+		}
+
+		if (itemNecessario == null) {
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
+		}
+
+		if (itemDoador == null) {
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemDoado + ".");
+		}
+
+		if (!(itemNecessario.getDescritor().equals(itemDoador.getDescritor()))) {
+			throw new UnsupportedOperationException("Os itens nao tem descricoes iguais.");
+		}
+
+		int delta1 = itemNecessario.getQuantidade() - itemDoador.getQuantidade();
+		int delta2 = itemDoador.getQuantidade() - itemNecessario.getQuantidade();
+
+		if (delta1 < 0) {
+			delta1 = 0;
+		}
+
+		if (delta2 < 0) {
+			delta2 = 0;
+		}
+		
+		Integer qtdDescritor = itemNecessario.setQuantidadeDoBem(delta1) + itemDoador.setQuantidadeDoBem(delta2);
+
+		if (itemNecessario.getQuantidade() == 0) {
+			usuarioReceptor.removeItem(idItemNecessario);
+		}
+		
+		if (itemDoador.getQuantidade() == 0) {
+			usuarioDoador.removeItem(idItemDoado);
+		}
+
+		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "+
+				itemNecessario.getDescritor() + ", quantidade: " + Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade()) +
+				", receptor: " + usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
+		
+		String[] vetor = new String[]{itemNecessario.getDescritor(), String.valueOf(qtdDescritor),resposta};
+		
+		return vetor;
 	}
 
 }
