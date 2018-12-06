@@ -108,6 +108,18 @@ public class Facade {
 		return this.itemController.listaDoacoes();
 	}
 	
+	//US7
+	
+	public void finalizaSistema() {
+		this.usuarioController.finalizaSistema();
+		this.itemController.finalizaSistema();
+	}
+	
+	public void iniciaSistema() {
+		this.itemController.inicializaSistema();
+		this.usuarioController.inicializaSistema();
+	}
+	
 	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
@@ -117,7 +129,8 @@ public class Facade {
 							 "acceptance_tests/use_case_3.txt",
 							 "acceptance_tests/use_case_4.txt",
 							 "acceptance_tests/use_case_5.txt",
-							 "acceptance_tests/use_case_6.txt"};
+							 "acceptance_tests/use_case_6.txt",
+							 "acceptance_tests/use_case_7.txt"};
 		EasyAccept.main(args);
 	}
 

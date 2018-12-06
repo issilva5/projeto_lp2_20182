@@ -1,5 +1,11 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -356,6 +362,130 @@ public class ItemController {
 		}
 		
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+
+	/**
+	 * Encerra o sistema salvando os descritores e historico de doações num arquivo.
+	 * @throws IOException
+	 */
+	public void finalizaSistema() {
+		this.salvaDescritores();
+		this.salvaDoacoes();
+	}
+
+	private void salvaDoacoes() {
+		
+		try {
+			File doacoes = new File("arquivos_sistema/doacoes");
+			FileOutputStream fos = new FileOutputStream(doacoes);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			
+			for(Doacao d : this.doacao) {
+				os.writeObject(d);
+			}
+			
+			os.writeObject(null);
+			
+			os.close();
+			fos.close();
+			
+			this.doacao.clear();
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao fechar sistema");
+			
+		}
+		
+	}
+
+	private void salvaDescritores() {
+		
+		try {
+			File descritores = new File("arquivos_sistema/descritores");
+			FileOutputStream fos = new FileOutputStream(descritores);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			
+			for(Descritor d : this.descritores.values()) {
+				System.out.println(d);
+				os.writeObject(d);
+			}
+			System.out.println("MEEEEEEEEE");
+			os.writeObject(null);
+			
+			os.close();
+			fos.close();
+			
+			this.descritores.clear();
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao fechar sistema");
+			
+		}
+		
+	}
+
+	public void inicializaSistema() {
+		
+		this.leDoacoes();
+		this.leDescritores();
+		
+	}
+
+	private void leDescritores() {
+		
+		try {
+			
+			File descritores = new File("arquivos_sistema/descritores");
+			FileInputStream fos = new FileInputStream(descritores);
+			ObjectInputStream os = new ObjectInputStream(fos);
+			Descritor d;
+			
+			while((d = (Descritor) os.readObject()) != null) {
+				System.out.println(d);
+				this.descritores.put(d.getNome(), d);
+			}
+			
+			os.close();
+			fos.close();
+			
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		} catch (ClassNotFoundException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		}
+		
+	}
+
+	private void leDoacoes() {
+		
+		try {
+			
+			File doacoes = new File("arquivos_sistema/doacoes");
+			FileInputStream fos = new FileInputStream(doacoes);
+			ObjectInputStream os = new ObjectInputStream(fos);
+			Doacao d;
+			
+			while((d = (Doacao) os.readObject()) != null) {
+				this.doacao.add(d);
+			}
+			
+			os.close();
+			fos.close();
+			
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		} catch (ClassNotFoundException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		}
+		
 	}
 
 }

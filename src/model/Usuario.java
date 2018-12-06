@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +11,9 @@ import java.util.Map;
  * Representacao de um usuario no sistema
  */
 @SuppressWarnings("unused")
-public class Usuario {
+public class Usuario implements Serializable {
+
+	private static final long serialVersionUID = 4L;
 
 	/**
 	 * Nome do usuario

@@ -1,9 +1,14 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TreeMap;
 
 import model.Item;
@@ -607,6 +611,65 @@ public class UsuarioController {
 		String[] vetor = new String[]{itemNecessario.getDescritor(), String.valueOf(qtdDescritor),resposta};
 		
 		return vetor;
+	}
+
+	/**
+	 * Encerra o sistema, salvando em um arquivo os usuários.
+	 */
+	public void finalizaSistema() {
+		
+		try {
+		
+			File users = new File("arquivos_sistema/users");
+			FileOutputStream fos = new FileOutputStream(users);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			
+			for(Usuario u : this.usuarios.values()) {
+				os.writeObject(u);
+			}
+			
+			os.writeObject(null);
+			
+			os.close();
+			fos.close();
+			
+			this.usuarios.clear();
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao fechar sistema");
+			
+		}
+	}
+
+	/**
+	 * Inicializa o sistema.
+	 */
+	public void inicializaSistema() {
+		
+		try {
+			
+			File users = new File("arquivos_sistema/users");
+			FileInputStream fos = new FileInputStream(users);
+			ObjectInputStream os = new ObjectInputStream(fos);
+			Usuario u;
+			
+			while((u = (Usuario) os.readObject()) != null) {
+				this.usuarios.put(u.getDocID(), u);
+			}
+			
+			os.close();
+			fos.close();
+			
+		} catch (IOException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		} catch (ClassNotFoundException e) {
+			
+			throw new RuntimeException("Falha ao iniciar sistema");
+			
+		}
+		
 	}
 
 }

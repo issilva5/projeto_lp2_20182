@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -9,8 +10,9 @@ import java.time.format.ResolverStyle;
  * @author Isaias Martins
  *
  */
-public class Doacao implements Comparable<Doacao>{
+public class Doacao implements Comparable<Doacao>, Serializable {
 	
+	private static final long serialVersionUID = 3L;
 	private LocalDate tempo;
 	private String doacao;
 	private String descritor;

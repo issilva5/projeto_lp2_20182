@@ -1,10 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Representação dos descritores de itens do sistema.
  */
-public class Descritor implements Comparable<Descritor>{
+public class Descritor implements Comparable<Descritor>, Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Nome do descritor.
 	 */
