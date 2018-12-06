@@ -1,11 +1,13 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import model.Descritor;
+import model.Doacao;
 
 /**
  * 
@@ -26,7 +28,7 @@ public class ItemController {
 	 */
 
 	private UsuarioController usuarioController;
-	
+	private List<Doacao> doacao = new ArrayList<>();
 	private List<String> registro;
 
 	/**
@@ -308,7 +310,14 @@ public class ItemController {
 		return this.usuarioController.match(idReceptor, idItemNecessario);
 
 	}
-
+	
+	/**
+	 * Metodo que realiza Doacao
+	 * @param idItemNecessario Id do item necessario
+	 * @param idItemDoado Id do item doado
+	 * @param data Data da doação
+	 * @return String contendo a descricao da doacao
+	 */
 	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
 
 		if (Integer.parseInt(idItemNecessario) < 0) {
@@ -323,18 +332,30 @@ public class ItemController {
 		}
 
 		String[] vetor = this.usuarioController.realizaDoacao(idItemNecessario, idItemDoado, data);
-		
+
 		this.descritores.get(vetor[0]).changeQuant(Integer.parseInt(vetor[1]));
-		
+
 		this.registro.add(vetor[2]);
-		
+		this.doacao.add(new Doacao(vetor[2], vetor[0]));
 		return vetor[2];
-		
 
 	}
-	
-	
-	
-	
+
+	/**
+	 * Metodo para listar doacoes.
+	 * A listagem é ordenada pela data.
+	 * @return String contendo a listagem.
+	 */
+	public String listaDoacoes() {
+		String texto = "";
+
+		Collections.sort(this.doacao);
+
+		for (Doacao d : this.doacao) {
+			texto += d.toString() + " | ";
+		}
+		
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
 
 }

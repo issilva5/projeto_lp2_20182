@@ -537,7 +537,14 @@ public class UsuarioController {
 		return itensEncontrados;
 
 	}
-
+	
+	/**
+	 * Metodo que realiza Doacao
+	 * @param idItemNecessario Id do item necessario
+	 * @param idItemDoado Id do item doado
+	 * @param data Data da doação
+	 * @return Array de String contendo [DESCRITOR DO ITEM, QUANTIDADE A SER ALTERADO NO DESCRITOR, DESCRICAO DA DOACAO]
+	 */
 	public String[] realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
 		Usuario usuarioReceptor = null;
 		Usuario usuarioDoador = null;
@@ -581,9 +588,10 @@ public class UsuarioController {
 		if (delta2 < 0) {
 			delta2 = 0;
 		}
+		int quantidadeMin = Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade());
 		
 		Integer qtdDescritor = itemNecessario.setQuantidadeDoBem(delta1) + itemDoador.setQuantidadeDoBem(delta2);
-
+		
 		if (itemNecessario.getQuantidade() == 0) {
 			usuarioReceptor.removeItem(idItemNecessario);
 		}
@@ -593,7 +601,7 @@ public class UsuarioController {
 		}
 
 		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "+
-				itemNecessario.getDescritor() + ", quantidade: " + Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade()) +
+				itemNecessario.getDescritor() + ", quantidade: " + quantidadeMin +
 				", receptor: " + usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
 		
 		String[] vetor = new String[]{itemNecessario.getDescritor(), String.valueOf(qtdDescritor),resposta};

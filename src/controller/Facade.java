@@ -78,7 +78,7 @@ public class Facade {
 	
 	public String adicionaItemNecessario(String idReceptor, String descricaoItem, int quantidade, String tags) {
 		return this.itemController.adicionaItem(idReceptor, descricaoItem, quantidade, tags);
-	}
+	} 
 	
 	public String listaItensNecessarios() {
 		return this.itemController.listaItens("receptor");
@@ -102,6 +102,10 @@ public class Facade {
 	
 	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
 		return this.itemController.realizaDoacao(idItemNecessario,idItemDoado,data);
+	}
+	
+	public String listaDoacoes() {
+		return this.itemController.listaDoacoes();
 	}
 	
 	// TESTES DE ACEITAÇÃO
