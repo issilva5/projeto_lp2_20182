@@ -554,7 +554,8 @@ public class UsuarioController {
 		Usuario usuarioDoador = null;
 		Item itemNecessario = null;
 		Item itemDoador = null;
-
+		
+		//Procurando os usuários e os itens no sistema
 		for (Usuario u : this.usuarios.values()) {
 			if (u.getStatus().equals("receptor")) {
 				if (u.getItemId(idItemNecessario) != null) {
@@ -562,7 +563,7 @@ public class UsuarioController {
 					usuarioReceptor = u;
 				}
 
-			} else if (u.getStatus().equals("doador")) {
+			} else {
 				if (u.getItemId(idItemDoado) != null) {
 					itemDoador = u.getItemId(idItemDoado);
 					usuarioDoador = u;
@@ -570,6 +571,7 @@ public class UsuarioController {
 			}
 		}
 
+		//Vendo se os itens foram achados
 		if (itemNecessario == null) {
 			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
 		}
@@ -582,6 +584,7 @@ public class UsuarioController {
 			throw new UnsupportedOperationException("Os itens nao tem descricoes iguais.");
 		}
 
+		//Calculos de quantidade
 		int delta1 = itemNecessario.getQuantidade() - itemDoador.getQuantidade();
 		int delta2 = itemDoador.getQuantidade() - itemNecessario.getQuantidade();
 
@@ -596,6 +599,7 @@ public class UsuarioController {
 		
 		Integer qtdDescritor = itemNecessario.setQuantidadeDoBem(delta1) + itemDoador.setQuantidadeDoBem(delta2);
 		
+		//Estudando a necessidade de remover itens
 		if (itemNecessario.getQuantidade() == 0) {
 			usuarioReceptor.removeItem(idItemNecessario);
 		}
@@ -604,10 +608,12 @@ public class UsuarioController {
 			usuarioDoador.removeItem(idItemDoado);
 		}
 
+		//Gerando a saida
 		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "+
 				itemNecessario.getDescritor() + ", quantidade: " + quantidadeMin +
 				", receptor: " + usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
 		
+		//Gerando vetor de resposta
 		String[] vetor = new String[]{itemNecessario.getDescritor(), String.valueOf(qtdDescritor),resposta};
 		
 		return vetor;

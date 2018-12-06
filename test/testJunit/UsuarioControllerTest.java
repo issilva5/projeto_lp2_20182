@@ -15,10 +15,11 @@ class UsuarioControllerTest {
 	
 	@BeforeEach
 	public void setUp() {
-		
+		this.controller.atualizaReceptores("arquivos_sistema/novosReceptores.csv");
 		this.controller.adicionaDoador("12345678910", "Ariel", "ariel@ccc", "992484833", "PESSOA_FISICA");
 		this.controller.adicionaDoador("10154010408", "Itallo", "itallo@ccc", "81792479", "PESSOA_FISICA");
 		this.controller.adicionaItem("10154010408","1", "fralda", 10, "geriatrica,pequena");
+		this.controller.adicionaItem("84473712044", "2", "fraldinha", 10, "geriatrica,pequena");
 		
 	}
 	
@@ -284,6 +285,37 @@ class UsuarioControllerTest {
 		assertEquals("2 - fralda, tags: [bebe, pequena], quantidade: 2 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.controller.pesquisaItemParaDoacaoPorDescricao("fralda"));
 	}
 	
+	@Test
+	public void testRealizaDoacaoItemNecessarioNotFound() {
+		
+		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
+			this.controller.realizaDoacao("3", "1", "06/12/2018");
+		});
+		
+		assertEquals("Item nao encontrado: 3.", aux.getMessage());
+		
+	}
 	
+	@Test
+	public void testRealizaDoacaoItemDoadoNotFound() {
+		
+		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
+			this.controller.realizaDoacao("2", "15", "06/12/2018");
+		});
+		
+		assertEquals("Item nao encontrado: 15.", aux.getMessage());
+		
+	}
+	
+	@Test
+	public void testRealizaDoacaoItensDifDescritor() {
+		
+		Throwable aux = assertThrows(UnsupportedOperationException.class, () -> {
+			this.controller.realizaDoacao("2", "1", "06/12/2018");
+		});
+		
+		assertEquals("Os itens nao tem descricoes iguais.", aux.getMessage());
+		
+	}
 
 }

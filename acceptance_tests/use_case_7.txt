@@ -8,14 +8,7 @@ finalizaSistema
 
 iniciaSistema
 
-## Lista descritores ##
 
-expect "5 - cadeira de alimentacao | 15 - cadeira de praia | 31 - cadeira de rodas\
- | 4 - cadeira reclinavel | 3 - calca jeans | 40 - camiseta | 15 - cobertor | 15 - colchao\
- | 0 - computador | 0 - curso de programacao | 0 - escova de dente | 0 - frauda | 68 - jaqueta de couro\
- | 0 - livro | 0 - playstation 4 | 0 - sabonete | 0 - talheres | 0 - televisao | 0 - toalha de banho\
- | 0 - travesseiro | 0 - verduras" listaDescritorDeItensParaDoacao
- 
 ## Lista itens para doar ##
 
 expect ${idItem17}" - jaqueta de couro, tags: [outfit, couro de boi, couro de bode], quantidade: 42, doador: Aramis Araujo/49847103331\

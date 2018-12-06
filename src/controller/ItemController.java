@@ -333,7 +333,7 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
-		if (data == null || data.isEmpty()) {
+		if (data == null || data.trim().isEmpty()) {
 			throw new IllegalArgumentException("Entrada invalida: data nao pode ser vazia ou nula.");
 		}
 
@@ -406,10 +406,8 @@ public class ItemController {
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			
 			for(Descritor d : this.descritores.values()) {
-				System.out.println(d);
 				os.writeObject(d);
 			}
-			System.out.println("MEEEEEEEEE");
 			os.writeObject(null);
 			
 			os.close();
@@ -441,7 +439,6 @@ public class ItemController {
 			Descritor d;
 			
 			while((d = (Descritor) os.readObject()) != null) {
-				System.out.println(d);
 				this.descritores.put(d.getNome(), d);
 			}
 			
