@@ -293,12 +293,14 @@ public class ItemController {
 
 	/**
 	 * 
-	 * @param idReceptor
-	 * @param idItemNecessario
-	 * @return
+	 * Realiza match de itens para doacao com base em um item necessario
+	 * 
+	 * @param idReceptor       identificador do receptor
+	 * @param idItemNecessario identificador do item necessario
+	 * @return String contendo itens para doacao que fazem match com o item
+	 *         necessario
 	 */
 
-	// TESTE
 	public String match(String idReceptor, String idItemNecessario) {
 
 		if (idReceptor == null || idReceptor.isEmpty()) {
@@ -316,12 +318,13 @@ public class ItemController {
 		return this.usuarioController.match(idReceptor, idItemNecessario);
 
 	}
-	
+
 	/**
 	 * Metodo que realiza Doacao
+	 * 
 	 * @param idItemNecessario Id do item necessario
-	 * @param idItemDoado Id do item doado
-	 * @param data Data da doação
+	 * @param idItemDoado      Id do item doado
+	 * @param data             Data da doação
 	 * @return String contendo a descricao da doacao
 	 */
 	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
@@ -348,8 +351,8 @@ public class ItemController {
 	}
 
 	/**
-	 * Metodo para listar doacoes.
-	 * A listagem é ordenada pela data.
+	 * Metodo para listar doacoes. A listagem é ordenada pela data.
+	 * 
 	 * @return String contendo a listagem.
 	 */
 	public String listaDoacoes() {
@@ -360,12 +363,13 @@ public class ItemController {
 		for (Doacao d : this.doacao) {
 			texto += d.toString() + " | ";
 		}
-		
+
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
 	/**
 	 * Encerra o sistema salvando os descritores e historico de doações num arquivo.
+	 * 
 	 * @throws IOException
 	 */
 	public void finalizaSistema() {
@@ -374,115 +378,115 @@ public class ItemController {
 	}
 
 	private void salvaDoacoes() {
-		
+
 		try {
 			File doacoes = new File("arquivos_sistema/doacoes");
 			FileOutputStream fos = new FileOutputStream(doacoes);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
-			
-			for(Doacao d : this.doacao) {
+
+			for (Doacao d : this.doacao) {
 				os.writeObject(d);
 			}
-			
+
 			os.writeObject(null);
-			
+
 			os.close();
 			fos.close();
-			
+
 			this.doacao.clear();
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao fechar sistema");
-			
+
 		}
-		
+
 	}
 
 	private void salvaDescritores() {
-		
+
 		try {
 			File descritores = new File("arquivos_sistema/descritores");
 			FileOutputStream fos = new FileOutputStream(descritores);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
-			
-			for(Descritor d : this.descritores.values()) {
+
+			for (Descritor d : this.descritores.values()) {
 				os.writeObject(d);
 			}
 			os.writeObject(null);
-			
+
 			os.close();
 			fos.close();
-			
+
 			this.descritores.clear();
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao fechar sistema");
-			
+
 		}
-		
+
 	}
 
 	public void inicializaSistema() {
-		
+
 		this.leDoacoes();
 		this.leDescritores();
-		
+
 	}
 
 	private void leDescritores() {
-		
+
 		try {
-			
+
 			File descritores = new File("arquivos_sistema/descritores");
 			FileInputStream fos = new FileInputStream(descritores);
 			ObjectInputStream os = new ObjectInputStream(fos);
 			Descritor d;
-			
-			while((d = (Descritor) os.readObject()) != null) {
+
+			while ((d = (Descritor) os.readObject()) != null) {
 				this.descritores.put(d.getNome(), d);
 			}
-			
+
 			os.close();
 			fos.close();
-			
+
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		} catch (ClassNotFoundException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		}
-		
+
 	}
 
 	private void leDoacoes() {
-		
+
 		try {
-			
+
 			File doacoes = new File("arquivos_sistema/doacoes");
 			FileInputStream fos = new FileInputStream(doacoes);
 			ObjectInputStream os = new ObjectInputStream(fos);
 			Doacao d;
-			
-			while((d = (Doacao) os.readObject()) != null) {
+
+			while ((d = (Doacao) os.readObject()) != null) {
 				this.doacao.add(d);
 			}
-			
+
 			os.close();
 			fos.close();
-			
+
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		} catch (ClassNotFoundException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		}
-		
+
 	}
 
 }

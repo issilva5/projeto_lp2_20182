@@ -397,18 +397,25 @@ public class UsuarioController {
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
 
 		List<Item> itens = getItensParaDoacaoPorDescricao(desc);
-
 		String texto = "";
+		
 		for (Item i : itens) {
 
 			texto += i.toString() + " | ";
-
 		}
 
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
 
-	// TESTE
+	/**
+	 * Realiza match de itens para doacao com base em um item necessario
+	 * 
+	 * @param idReceptor       identificador do receptor
+	 * @param idItemNecessario identificador do item necessario
+	 * @return String contendo itens para doacao que fazem match com o item
+	 *         necessario
+	 */
+
 	public String match(String idReceptor, String idItemNecessario) {
 
 		if (!this.usuarios.containsKey(idReceptor)) {
@@ -459,17 +466,13 @@ public class UsuarioController {
 	private Map<Integer, List<Item>> pontuaItens(String idReceptor, String idItemNecessario) {
 
 		String descItemNecessario = this.getItemDescritor(idItemNecessario, idReceptor);
-
 		List<String> tagsItemNecessario = this.getTagsItem(idReceptor, idItemNecessario);
-
 		List<Item> itensMatch = this.getItensParaDoacaoPorDescricao(descItemNecessario);
-
 		Map<Integer, List<Item>> itensPontuados = new TreeMap<>(Collections.reverseOrder());
 
 		for (Item i : itensMatch) {
 
 			List<String> tagsItemDoado = i.getTags();
-
 			int pontuacao = 20;
 
 			for (int x = 0; x < tagsItemNecessario.size(); x++) {
@@ -478,13 +481,11 @@ public class UsuarioController {
 						&& tagsItemDoado.get(x).toLowerCase().equals(tagsItemNecessario.get(x).toLowerCase())) {
 
 					pontuacao += 10;
-
 				}
 
 				else if (tagsItemDoado.contains(tagsItemNecessario.get(x).toLowerCase())) {
 
 					pontuacao += 5;
-
 				}
 			}
 
@@ -497,30 +498,16 @@ public class UsuarioController {
 				List<Item> itens = new ArrayList<>();
 				itens.add(i);
 				itensPontuados.put(pontuacao, itens);
-
 			}
 		}
 
 		return itensPontuados;
 	}
 
-	/**
-	 * 
-	 * @param idReceptor
-	 * @param idItemNecessario
-	 * @return
-	 */
-
 	private List<String> getTagsItem(String idReceptor, String idItemNecessario) {
 
 		return this.usuarios.get(idReceptor).getTagsItem(idItemNecessario);
 	}
-
-	/**
-	 * 
-	 * @param desc
-	 * @return
-	 */
 
 	private List<Item> getItensParaDoacaoPorDescricao(String desc) {
 
@@ -541,21 +528,23 @@ public class UsuarioController {
 		return itensEncontrados;
 
 	}
-	
+
 	/**
 	 * Metodo que realiza Doacao
+	 * 
 	 * @param idItemNecessario Id do item necessario
-	 * @param idItemDoado Id do item doado
-	 * @param data Data da doação
-	 * @return Array de String contendo [DESCRITOR DO ITEM, QUANTIDADE A SER ALTERADO NO DESCRITOR, DESCRICAO DA DOACAO]
+	 * @param idItemDoado      Id do item doado
+	 * @param data             Data da doação
+	 * @return Array de String contendo [DESCRITOR DO ITEM, QUANTIDADE A SER
+	 *         ALTERADO NO DESCRITOR, DESCRICAO DA DOACAO]
 	 */
 	public String[] realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
 		Usuario usuarioReceptor = null;
 		Usuario usuarioDoador = null;
 		Item itemNecessario = null;
 		Item itemDoador = null;
-		
-		//Procurando os usuários e os itens no sistema
+
+		// Procurando os usuários e os itens no sistema
 		for (Usuario u : this.usuarios.values()) {
 			if (u.getStatus().equals("receptor")) {
 				if (u.getItemId(idItemNecessario) != null) {
@@ -571,7 +560,7 @@ public class UsuarioController {
 			}
 		}
 
-		//Vendo se os itens foram achados
+		// Vendo se os itens foram achados
 		if (itemNecessario == null) {
 			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
 		}
@@ -584,7 +573,7 @@ public class UsuarioController {
 			throw new UnsupportedOperationException("Os itens nao tem descricoes iguais.");
 		}
 
-		//Calculos de quantidade
+		// Calculos de quantidade
 		int delta1 = itemNecessario.getQuantidade() - itemDoador.getQuantidade();
 		int delta2 = itemDoador.getQuantidade() - itemNecessario.getQuantidade();
 
@@ -596,26 +585,26 @@ public class UsuarioController {
 			delta2 = 0;
 		}
 		int quantidadeMin = Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade());
-		
+
 		Integer qtdDescritor = itemNecessario.setQuantidadeDoBem(delta1) + itemDoador.setQuantidadeDoBem(delta2);
-		
-		//Estudando a necessidade de remover itens
+
+		// Estudando a necessidade de remover itens
 		if (itemNecessario.getQuantidade() == 0) {
 			usuarioReceptor.removeItem(idItemNecessario);
 		}
-		
+
 		if (itemDoador.getQuantidade() == 0) {
 			usuarioDoador.removeItem(idItemDoado);
 		}
 
-		//Gerando a saida
-		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "+
-				itemNecessario.getDescritor() + ", quantidade: " + quantidadeMin +
-				", receptor: " + usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
-		
-		//Gerando vetor de resposta
-		String[] vetor = new String[]{itemNecessario.getDescritor(), String.valueOf(qtdDescritor),resposta};
-		
+		// Gerando a saida
+		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "
+				+ itemNecessario.getDescritor() + ", quantidade: " + quantidadeMin + ", receptor: "
+				+ usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
+
+		// Gerando vetor de resposta
+		String[] vetor = new String[] { itemNecessario.getDescritor(), String.valueOf(qtdDescritor), resposta };
+
 		return vetor;
 	}
 
@@ -623,27 +612,27 @@ public class UsuarioController {
 	 * Encerra o sistema, salvando em um arquivo os usuários.
 	 */
 	public void finalizaSistema() {
-		
+
 		try {
-		
+
 			File users = new File("arquivos_sistema/users");
 			FileOutputStream fos = new FileOutputStream(users);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
-			
-			for(Usuario u : this.usuarios.values()) {
+
+			for (Usuario u : this.usuarios.values()) {
 				os.writeObject(u);
 			}
-			
+
 			os.writeObject(null);
-			
+
 			os.close();
 			fos.close();
-			
+
 			this.usuarios.clear();
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao fechar sistema");
-			
+
 		}
 	}
 
@@ -651,31 +640,31 @@ public class UsuarioController {
 	 * Inicializa o sistema.
 	 */
 	public void inicializaSistema() {
-		
+
 		try {
-			
+
 			File users = new File("arquivos_sistema/users");
 			FileInputStream fos = new FileInputStream(users);
 			ObjectInputStream os = new ObjectInputStream(fos);
 			Usuario u;
-			
-			while((u = (Usuario) os.readObject()) != null) {
+
+			while ((u = (Usuario) os.readObject()) != null) {
 				this.usuarios.put(u.getDocID(), u);
 			}
-			
+
 			os.close();
 			fos.close();
-			
+
 		} catch (IOException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		} catch (ClassNotFoundException e) {
-			
+
 			throw new RuntimeException("Falha ao iniciar sistema");
-			
+
 		}
-		
+
 	}
 
 }
