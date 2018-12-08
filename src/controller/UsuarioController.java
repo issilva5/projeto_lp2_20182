@@ -619,11 +619,11 @@ public class UsuarioController {
 			FileOutputStream fos = new FileOutputStream(users);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 
+			os.writeInt(this.usuarios.size());
+			
 			for (Usuario u : this.usuarios.values()) {
 				os.writeObject(u);
 			}
-
-			os.writeObject(null);
 
 			os.close();
 			fos.close();
@@ -644,16 +644,19 @@ public class UsuarioController {
 		try {
 
 			File users = new File("arquivos_sistema/users");
-			FileInputStream fos = new FileInputStream(users);
-			ObjectInputStream os = new ObjectInputStream(fos);
+			FileInputStream fis = new FileInputStream(users);
+			ObjectInputStream is = new ObjectInputStream(fis);
 			Usuario u;
 
-			while ((u = (Usuario) os.readObject()) != null) {
+			int tam = is.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				u = (Usuario) is.readObject();
 				this.usuarios.put(u.getDocID(), u);
 			}
 
-			os.close();
-			fos.close();
+			is.close();
+			fis.close();
 
 		} catch (IOException e) {
 

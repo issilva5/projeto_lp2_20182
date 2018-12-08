@@ -384,11 +384,11 @@ public class ItemController {
 			FileOutputStream fos = new FileOutputStream(doacoes);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 
+			os.writeInt(this.doacao.size());
+			
 			for (Doacao d : this.doacao) {
 				os.writeObject(d);
 			}
-
-			os.writeObject(null);
 
 			os.close();
 			fos.close();
@@ -409,10 +409,11 @@ public class ItemController {
 			FileOutputStream fos = new FileOutputStream(descritores);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 
+			os.writeInt(this.descritores.size());
+			
 			for (Descritor d : this.descritores.values()) {
 				os.writeObject(d);
 			}
-			os.writeObject(null);
 
 			os.close();
 			fos.close();
@@ -438,16 +439,19 @@ public class ItemController {
 		try {
 
 			File descritores = new File("arquivos_sistema/descritores");
-			FileInputStream fos = new FileInputStream(descritores);
-			ObjectInputStream os = new ObjectInputStream(fos);
+			FileInputStream fis = new FileInputStream(descritores);
+			ObjectInputStream is = new ObjectInputStream(fis);
 			Descritor d;
 
-			while ((d = (Descritor) os.readObject()) != null) {
+			int tam = is.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				d = (Descritor) is.readObject();
 				this.descritores.put(d.getNome(), d);
 			}
 
-			os.close();
-			fos.close();
+			is.close();
+			fis.close();
 
 		} catch (IOException e) {
 
@@ -470,7 +474,10 @@ public class ItemController {
 			ObjectInputStream os = new ObjectInputStream(fos);
 			Doacao d;
 
-			while ((d = (Doacao) os.readObject()) != null) {
+			int tam = os.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				d = (Doacao) os.readObject();
 				this.doacao.add(d);
 			}
 
