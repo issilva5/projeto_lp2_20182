@@ -471,5 +471,19 @@ class ItemControllerTest {
 		assertEquals("06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044 | 06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044 | 07/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044", this.ic.listaDoacoes());
 		
 	}
+	@Test
+	public void testMatch() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.match(null, null) ;
+		});
+		
+		Throwable aux1 = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.match("234234", "-1") ;
+		});
+		
+		assertEquals("Entrada invalida: id do usuario nao pode ser vazio ou nulo.", aux.getMessage());
+		assertEquals("Entrada invalida: id do item nao pode ser negativo.", aux1.getMessage());
 
+	
+	}
 }
