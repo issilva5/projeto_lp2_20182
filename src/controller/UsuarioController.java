@@ -658,6 +658,10 @@ public class UsuarioController {
 			is.close();
 			fis.close();
 
+		}  catch(FileNotFoundException f) {
+			
+			return;
+			
 		} catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");

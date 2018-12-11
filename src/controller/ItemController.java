@@ -2,6 +2,7 @@ package controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -452,6 +453,10 @@ public class ItemController {
 			is.close();
 			fis.close();
 
+		}  catch(FileNotFoundException f) {
+			
+			return;
+			
 		} catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");
@@ -483,6 +488,10 @@ public class ItemController {
 			os.close();
 			fos.close();
 
+		} catch(FileNotFoundException f) {
+			
+			return;
+			
 		} catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");
