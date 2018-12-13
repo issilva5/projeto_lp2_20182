@@ -1,7 +1,9 @@
-package controller;
+package view;
 
 import java.io.IOException;
 
+import controller.ItemController;
+import controller.UsuarioController;
 import easyaccept.EasyAccept;
 
 public class Facade {
@@ -9,8 +11,6 @@ public class Facade {
 	
 	private UsuarioController usuarioController = new UsuarioController();
 	private ItemController itemController = new ItemController(usuarioController);
-
-	// Controller Usuario
 
 	public String adicionaDoador(String docID, String nome, String email, String celular, String classe) {
 		return usuarioController.adicionaDoador(docID, nome, email, celular, classe);
@@ -39,8 +39,6 @@ public class Facade {
 	public void atualizaReceptores(String path) {
 		this.usuarioController.atualizaReceptores(path);
 	}
-
-	// ITEM CONTROLLER
 	
 	public void adicionaDescritor(String descricao) {
 		this.itemController.adicionaDescritor(descricao);
@@ -73,8 +71,6 @@ public class Facade {
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
 		return this.itemController.pesquisaItemParaDoacaoPorDescricao(desc);
 	}
-
-	//US4
 	
 	public String adicionaItemNecessario(String idReceptor, String descricaoItem, int quantidade, String tags) {
 		return this.itemController.adicionaItem(idReceptor, descricaoItem, quantidade, tags);
@@ -92,13 +88,9 @@ public class Facade {
 		this.itemController.removeItem(idItem, idReceptor);
 	}
 	
-	//US5
-	
 	public String match (String idReceptor,String idItemNecessario) {
 		return this.itemController.match(idReceptor, idItemNecessario);
 	}
-	
-	//US6
 	
 	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
 		return this.itemController.realizaDoacao(idItemNecessario,idItemDoado,data);
@@ -107,8 +99,6 @@ public class Facade {
 	public String listaDoacoes() {
 		return this.itemController.listaDoacoes();
 	}
-	
-	//US7
 	
 	public void finalizaSistema() {
 		this.usuarioController.finalizaSistema();
@@ -119,11 +109,9 @@ public class Facade {
 		this.itemController.inicializaSistema();
 		this.usuarioController.inicializaSistema();
 	}
-	
-	// TESTES DE ACEITAÇÃO
 
 	public static void main(String[] args) {
-		args = new String[] {"controller.Facade", 
+		args = new String[] {"view.Facade", 
 							 "acceptance_tests/use_case_1.txt",
 							 "acceptance_tests/use_case_2.txt",
 							 "acceptance_tests/use_case_3.txt",

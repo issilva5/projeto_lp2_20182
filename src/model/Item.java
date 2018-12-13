@@ -110,9 +110,16 @@ public class Item implements Comparable<Item>, Serializable {
 		return aux;
 	}
 	
-	public int setQuantidadeDoBem(int quantidade) {
-		int aux = quantidade - this.quantidade;
-		this.quantidade = quantidade;
+	/**
+	 * Altera a quantidade de um item a partir de um delta.
+	 * Esse delta pode ser negativo.
+	 * 
+	 * @param delta variação de quantidade a ser aplicada.
+	 * @return diferença entre a nova quantidade e quantidade anterior.
+	 */
+	public int setQuantidadeDelta(int delta) {
+		int aux = delta - this.quantidade;
+		this.quantidade = delta;
 		return aux;
 	}
 

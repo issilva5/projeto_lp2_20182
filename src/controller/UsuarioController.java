@@ -586,7 +586,7 @@ public class UsuarioController {
 		}
 		int quantidadeMin = Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade());
 
-		Integer qtdDescritor = itemNecessario.setQuantidadeDoBem(delta1) + itemDoador.setQuantidadeDoBem(delta2);
+		Integer qtdDescritor = itemNecessario.setQuantidadeDelta(delta1) + itemDoador.setQuantidadeDelta(delta2);
 
 		// Estudando a necessidade de remover itens
 		if (itemNecessario.getQuantidade() == 0) {
@@ -658,11 +658,7 @@ public class UsuarioController {
 			is.close();
 			fis.close();
 
-		}  catch(FileNotFoundException f) {
-			
-			return;
-			
-		} catch (IOException e) {
+		}  catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");
 

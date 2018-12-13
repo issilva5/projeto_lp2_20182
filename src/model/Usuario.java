@@ -378,6 +378,12 @@ public class Usuario implements Serializable {
 		return this.itens.get(idItem).getTags();
 	}
 
+	/**
+	 * Retorna um item do usuário a partir de seu ID.
+	 * 
+	 * @param idItem id do item a ser retornado.
+	 * @return Item com o Id informado, ou null caso o item não exista.
+	 */
 	public Item getItemId(String idItem) {
 		if(!this.itens.containsKey(idItem)) {
 			return null; 

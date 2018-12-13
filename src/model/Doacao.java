@@ -7,14 +7,25 @@ import java.time.format.ResolverStyle;
 
 /**
  * Classe que representa uma doacao.
- * @author Isaias Martins
  *
  */
 public class Doacao implements Comparable<Doacao>, Serializable {
 	
 	private static final long serialVersionUID = 3L;
+	
+	/**
+	 * Data da doação.
+	 */
 	private LocalDate tempo;
+	
+	/**
+	 * Descrição textual da doação.
+	 */
 	private String doacao;
+	
+	/**
+	 * Descritor do itens da doação.
+	 */
 	private String descritor;
 	
 	/**

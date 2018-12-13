@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,11 +33,14 @@ public class ItemController {
 	 */
 
 	private UsuarioController usuarioController;
+	
+	/**
+	 * Lista das doações realizadas no sistema.
+	 */
 	private List<Doacao> doacao = new ArrayList<>();
-	private List<String> registro;
 
 	/**
-	 * numero de identificacao disponível para ser alocado ao item
+	 * Numero de identificacao disponível para ser alocado ao item
 	 */
 
 	private int numeroID;
@@ -54,7 +56,6 @@ public class ItemController {
 		this.descritores = new TreeMap<>();
 		this.usuarioController = usuarioController;
 		this.numeroID = 0;
-		this.registro = new ArrayList<>();
 	}
 
 	/**
@@ -181,7 +182,7 @@ public class ItemController {
 
 		}
 
-		if (Long.parseLong(idItem) < 0) {
+		if (Integer.parseInt(idItem) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
@@ -190,10 +191,6 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
 
 		}
-
-//		if (quantidade < 0) {
-//			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
-//		}
 
 		if (tags != null && !tags.trim().isEmpty())
 			this.usuarioController.atualizaTagsItem(idItem, idUsuario, tags);
@@ -344,7 +341,6 @@ public class ItemController {
 
 		this.descritores.get(vetor[0]).changeQuant(Integer.parseInt(vetor[1]));
 
-		this.registro.add(vetor[2]);
 		this.doacao.add(new Doacao(vetor[2], vetor[0]));
 		return vetor[2];
 
@@ -366,11 +362,9 @@ public class ItemController {
 
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
 	}
-
+	
 	/**
 	 * Encerra o sistema salvando os descritores e historico de doações num arquivo.
-	 * 
-	 * @throws IOException
 	 */
 	public void finalizaSistema() {
 		this.salvaDescritores();
@@ -427,6 +421,9 @@ public class ItemController {
 
 	}
 
+	/**
+	 * Inicializa o sistema lendo os descritores e historico de doações de um arquivo.
+	 */
 	public void inicializaSistema() {
 
 		this.leDoacoes();
@@ -453,10 +450,6 @@ public class ItemController {
 			is.close();
 			fis.close();
 
-		}  catch(FileNotFoundException f) {
-			
-			return;
-			
 		} catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");
@@ -488,10 +481,6 @@ public class ItemController {
 			os.close();
 			fos.close();
 
-		} catch(FileNotFoundException f) {
-			
-			return;
-			
 		} catch (IOException e) {
 
 			throw new RuntimeException("Falha ao iniciar sistema");
