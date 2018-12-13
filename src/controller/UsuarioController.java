@@ -1,9 +1,14 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
 import model.Item;
 import model.Usuario;
@@ -242,7 +248,7 @@ public class UsuarioController {
 	/**
 	 * Adiciona um item para doação em um usuário doador.
 	 * 
-	 * @param idUsuario      identificador do usuário a ter item associado.
+	 * @param idUsuario     identificador do usuário a ter item associado.
 	 * @param idItem        identificador do item a ser associado.
 	 * @param descricaoItem descritor do item.
 	 * @param quantidade    quantidade do item.
@@ -260,7 +266,7 @@ public class UsuarioController {
 	/**
 	 * Exibe um item de um doador específico.
 	 * 
-	 * @param idItem   identificador do item a ser exibido.
+	 * @param idItem    identificador do item a ser exibido.
 	 * @param idUsuario identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
@@ -277,7 +283,7 @@ public class UsuarioController {
 	 * Atualiza a quantidade de um item de um dado usuário doador.
 	 * 
 	 * @param idItem     identificador do item.
-	 * @param idUsuario   identificador do usuário.
+	 * @param idUsuario  identificador do usuário.
 	 * @param quantidade novo quantidade do item.
 	 * @return diferença entre a quantidade antiga e nova.
 	 */
@@ -294,9 +300,9 @@ public class UsuarioController {
 	/**
 	 * Atualiza as tags de um item de um dado usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
-	 * @param tags     novas tagas do item.
+	 * @param tags      novas tagas do item.
 	 */
 	public void atualizaTagsItem(String idItem, String idUsuario, String tags) {
 		if (!this.usuarios.containsKey(idUsuario)) {
@@ -309,7 +315,7 @@ public class UsuarioController {
 	/**
 	 * Remove um item de um usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
 	 * @return quantidade que o item tinha ao ser removido.
 	 */
@@ -326,7 +332,7 @@ public class UsuarioController {
 	/**
 	 * Pega o descritor de um item de um usuário doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
 	 * @return descritor do item.
 	 */
@@ -361,14 +367,13 @@ public class UsuarioController {
 	public String listaItens(String status) {
 
 		List<Item> itens = this.getListaItens(status);
-		
-		
+
 		if (status.equals("doador")) {
 			Collections.sort(itens, new ComparaItem());
 		} else if (status.equals("receptor")) {
 			Collections.sort(itens, new ComparaItemId());
 		}
-		
+
 		String texto = "";
 		for (Item i : itens) {
 			if (status.equals("doador")) {
@@ -390,17 +395,279 @@ public class UsuarioController {
 	 * @return String contendo os itens com a respectiva descrição.
 	 */
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
-		List<Item> itens = this.getListaItens("doador");
-		Collections.sort(itens);
 
+		List<Item> itens = getItensParaDoacaoPorDescricao(desc);
 		String texto = "";
+		
 		for (Item i : itens) {
-			if (i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
-				texto += i.toString() + " | ";
-			}
+
+			texto += i.toString() + " | ";
 		}
 
 		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+
+	/**
+	 * Realiza match de itens para doacao com base em um item necessario
+	 * 
+	 * @param idReceptor       identificador do receptor
+	 * @param idItemNecessario identificador do item necessario
+	 * @return String contendo itens para doacao que fazem match com o item
+	 *         necessario
+	 */
+
+	public String match(String idReceptor, String idItemNecessario) {
+
+		if (!this.usuarios.containsKey(idReceptor)) {
+			throw new UnsupportedOperationException("Usuario nao encontrado: " + idReceptor + ".");
+		}
+
+		if (this.usuarios.get(idReceptor).getStatus().equals("doador")) {
+			throw new UnsupportedOperationException("O Usuario deve ser um receptor: " + idReceptor + ".");
+		}
+
+		if (!this.usuarios.get(idReceptor).existeItem(idItemNecessario)) {
+
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
+
+		}
+
+		Map<Integer, List<Item>> itensPontuados = pontuaItens(idReceptor, idItemNecessario);
+
+		String itensMatch = "";
+
+		for (List<Item> itens : itensPontuados.values()) {
+
+			if (itens.size() == 1) {
+				itensMatch += itens.get(0).toString() + ", doador: "
+						+ this.usuarios.get(itens.get(0).getDono()).getNome() + "/" + itens.get(0).getDono() + " | ";
+			}
+
+			else {
+
+				Collections.sort(itens, new ComparaItemId());
+
+				for (int x = 0; x < itens.size(); x++) {
+
+					itensMatch += itens.get(x).toString() + ", doador: "
+							+ this.usuarios.get(itens.get(x).getDono()).getNome() + "/" + itens.get(x).getDono()
+							+ " | ";
+
+				}
+
+			}
+
+		}
+
+		return itensMatch.length() == 0 ? "" : itensMatch.substring(0, itensMatch.length() - 3);
+
+	}
+
+	private Map<Integer, List<Item>> pontuaItens(String idReceptor, String idItemNecessario) {
+
+		String descItemNecessario = this.getItemDescritor(idItemNecessario, idReceptor);
+		List<String> tagsItemNecessario = this.getTagsItem(idReceptor, idItemNecessario);
+		List<Item> itensMatch = this.getItensParaDoacaoPorDescricao(descItemNecessario);
+		Map<Integer, List<Item>> itensPontuados = new TreeMap<>(Collections.reverseOrder());
+
+		for (Item i : itensMatch) {
+
+			List<String> tagsItemDoado = i.getTags();
+			int pontuacao = 20;
+
+			for (int x = 0; x < tagsItemNecessario.size(); x++) {
+
+				if (tagsItemDoado.contains(tagsItemNecessario.get(x).toLowerCase())
+						&& tagsItemDoado.get(x).toLowerCase().equals(tagsItemNecessario.get(x).toLowerCase())) {
+
+					pontuacao += 10;
+				}
+
+				else if (tagsItemDoado.contains(tagsItemNecessario.get(x).toLowerCase())) {
+
+					pontuacao += 5;
+				}
+			}
+
+			if (itensPontuados.containsKey(pontuacao)) {
+				itensPontuados.get(pontuacao).add(i);
+			}
+
+			else {
+
+				List<Item> itens = new ArrayList<>();
+				itens.add(i);
+				itensPontuados.put(pontuacao, itens);
+			}
+		}
+
+		return itensPontuados;
+	}
+
+	private List<String> getTagsItem(String idReceptor, String idItemNecessario) {
+
+		return this.usuarios.get(idReceptor).getTagsItem(idItemNecessario);
+	}
+
+	private List<Item> getItensParaDoacaoPorDescricao(String desc) {
+
+		List<Item> itens = this.getListaItens("doador");
+		Collections.sort(itens);
+
+		List<Item> itensEncontrados = new ArrayList<>();
+
+		for (Item i : itens) {
+
+			if (i.getDescritor().toLowerCase().contains(desc.toLowerCase())) {
+
+				itensEncontrados.add(i);
+			}
+
+		}
+
+		return itensEncontrados;
+
+	}
+
+	/**
+	 * Metodo que realiza Doacao
+	 * 
+	 * @param idItemNecessario Id do item necessario
+	 * @param idItemDoado      Id do item doado
+	 * @param data             Data da doação
+	 * @return Array de String contendo [DESCRITOR DO ITEM, QUANTIDADE A SER
+	 *         ALTERADO NO DESCRITOR, DESCRICAO DA DOACAO]
+	 */
+	public String[] realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+		Usuario usuarioReceptor = null;
+		Usuario usuarioDoador = null;
+		Item itemNecessario = null;
+		Item itemDoador = null;
+
+		// Procurando os usuários e os itens no sistema
+		for (Usuario u : this.usuarios.values()) {
+			if (u.getStatus().equals("receptor")) {
+				if (u.getItemId(idItemNecessario) != null) {
+					itemNecessario = u.getItemId(idItemNecessario);
+					usuarioReceptor = u;
+				}
+
+			} else {
+				if (u.getItemId(idItemDoado) != null) {
+					itemDoador = u.getItemId(idItemDoado);
+					usuarioDoador = u;
+				}
+			}
+		}
+
+		// Vendo se os itens foram achados
+		if (itemNecessario == null) {
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemNecessario + ".");
+		}
+
+		if (itemDoador == null) {
+			throw new UnsupportedOperationException("Item nao encontrado: " + idItemDoado + ".");
+		}
+
+		if (!(itemNecessario.getDescritor().equals(itemDoador.getDescritor()))) {
+			throw new UnsupportedOperationException("Os itens nao tem descricoes iguais.");
+		}
+
+		// Calculos de quantidade
+		int delta1 = itemNecessario.getQuantidade() - itemDoador.getQuantidade();
+		int delta2 = itemDoador.getQuantidade() - itemNecessario.getQuantidade();
+
+		if (delta1 < 0) {
+			delta1 = 0;
+		}
+
+		if (delta2 < 0) {
+			delta2 = 0;
+		}
+		int quantidadeMin = Integer.min(itemNecessario.getQuantidade(), itemDoador.getQuantidade());
+
+		Integer qtdDescritor = itemNecessario.setQuantidadeDelta(delta1) + itemDoador.setQuantidadeDelta(delta2);
+
+		// Estudando a necessidade de remover itens
+		if (itemNecessario.getQuantidade() == 0) {
+			usuarioReceptor.removeItem(idItemNecessario);
+		}
+
+		if (itemDoador.getQuantidade() == 0) {
+			usuarioDoador.removeItem(idItemDoado);
+		}
+
+		// Gerando a saida
+		String resposta = data + " - doador: " + usuarioDoador.getNome() + "/" + usuarioDoador.getDocID() + ", item: "
+				+ itemNecessario.getDescritor() + ", quantidade: " + quantidadeMin + ", receptor: "
+				+ usuarioReceptor.getNome() + "/" + usuarioReceptor.getDocID();
+
+		// Gerando vetor de resposta
+		String[] vetor = new String[] { itemNecessario.getDescritor(), String.valueOf(qtdDescritor), resposta };
+
+		return vetor;
+	}
+
+	/**
+	 * Encerra o sistema, salvando em um arquivo os usuários.
+	 */
+	public void finalizaSistema() {
+
+		try {
+
+			File users = new File("arquivos_sistema/users");
+			FileOutputStream fos = new FileOutputStream(users);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+
+			os.writeInt(this.usuarios.size());
+			
+			for (Usuario u : this.usuarios.values()) {
+				os.writeObject(u);
+			}
+
+			os.close();
+			fos.close();
+
+			this.usuarios.clear();
+		} catch (IOException e) {
+
+			throw new RuntimeException("Falha ao fechar sistema");
+
+		}
+	}
+
+	/**
+	 * Inicializa o sistema.
+	 */
+	public void inicializaSistema() {
+
+		try {
+
+			File users = new File("arquivos_sistema/users");
+			FileInputStream fis = new FileInputStream(users);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			Usuario u;
+
+			int tam = is.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				u = (Usuario) is.readObject();
+				this.usuarios.put(u.getDocID(), u);
+			}
+
+			is.close();
+			fis.close();
+
+		}  catch (IOException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		} catch (ClassNotFoundException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		}
+
 	}
 
 }

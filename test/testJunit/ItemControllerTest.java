@@ -19,10 +19,12 @@ class ItemControllerTest {
 		this.uc.adicionaDoador("12345678910", "Ariel", "ariel@ccc", "992484833", "PESSOA_FISICA");
 		this.uc.adicionaDoador("10154010408", "Itallo", "itallo@ccc", "81792479", "PESSOA_FISICA");
 		this.uc.adicionaDoador("40028922000", "Isaias", "isaias@ccc", "40028922", "PESSOA_FISICA");
+		this.uc.atualizaReceptores("arquivos_sistema/novosReceptores.csv");
 		this.ic = new ItemController(this.uc);
 		this.ic.adicionaDescritor("cobertor");
 		this.ic.adicionaDescritor("fralda");
 		this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,pequena");
+		this.ic.adicionaItem("84473712044", "fralda", 10, "geriatrica,pequena");
 	}
 
 	@Test
@@ -107,19 +109,19 @@ class ItemControllerTest {
 
 	@Test
 	public void testAdicionaItemTagsVazia() {
-		assertEquals("2", this.ic.adicionaItem("10154010408", "fralda", 10, ""));
+		assertEquals("3", this.ic.adicionaItem("10154010408", "fralda", 10, ""));
 	}
 
 	@Test
 	public void testAdicionaItemDescritorInexistente() {
-		assertEquals("2", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
+		assertEquals("3", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
 	}
 
 	@Test
 	public void testAdicionaDoisItemDescritor() {
-		assertEquals("2", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
-		assertEquals("3", this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,grande"));
-		assertEquals(20, this.ic.getDescritorQuant("fralda"));
+		assertEquals("3", this.ic.adicionaItem("10154010408", "bola", 10, "ioga,idosos"));
+		assertEquals("4", this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,grande"));
+		assertEquals(30, this.ic.getDescritorQuant("fralda"));
 		assertEquals(10, this.ic.getDescritorQuant("bola"));
 	}
 
@@ -271,14 +273,14 @@ class ItemControllerTest {
 	public void testAtualizaItemParaDoacaoQuantidadeMaior() {
 		this.ic.atualizaItem("1", "10154010408", 15, "");
 		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 15", this.ic.exibeItem("1", "10154010408"));
-		assertEquals(15, this.ic.getDescritorQuant("fralda"));
+		assertEquals(25, this.ic.getDescritorQuant("fralda"));
 	}
 
 	@Test
 	public void testAtualizaItemParaDoacaoQuantidadeMenor() {
 		this.ic.atualizaItem("1", "10154010408", 5, "");
 		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 5", this.ic.exibeItem("1", "10154010408"));
-		assertEquals(5, this.ic.getDescritorQuant("fralda"));
+		assertEquals(15, this.ic.getDescritorQuant("fralda"));
 	}
 
 	@Test
@@ -339,14 +341,14 @@ class ItemControllerTest {
 
 	@Test
 	public void testRemoveItemParaDoacao() {
-		assertEquals(10, this.ic.getDescritorQuant("fralda"));
+		assertEquals(20, this.ic.getDescritorQuant("fralda"));
 		this.ic.removeItem("1", "10154010408");
-		assertEquals(0, this.ic.getDescritorQuant("fralda"));
+		assertEquals(10, this.ic.getDescritorQuant("fralda"));
 	}
 
 	@Test
 	public void testListaDescritorDeItensParaDoacao() {
-		assertEquals("0 - cobertor | 10 - fralda", this.ic.listaDescritorDeItensParaDoacao());
+		assertEquals("0 - cobertor | 20 - fralda", this.ic.listaDescritorDeItensParaDoacao());
 	}
 
 	@Test
@@ -355,7 +357,7 @@ class ItemControllerTest {
 		this.ic.adicionaItem("12345678910", "cobertor", 10, "lã,grande");
 
 		assertEquals(
-				"2 - cobertor, tags: [lã, grande], quantidade: 10, doador: Ariel/12345678910 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408",
+				"3 - cobertor, tags: [lã, grande], quantidade: 10, doador: Ariel/12345678910 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408",
 				this.ic.listaItens("doador"));
 	}
 
@@ -365,33 +367,20 @@ class ItemControllerTest {
 		this.ic.adicionaItem("12345678910", "cobertor", 2, "lã,pequeno");
 
 		assertEquals(
-				"1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408 | 2 - cobertor, tags: [lã, pequeno], quantidade: 2, doador: Ariel/12345678910",
+				"1 - fralda, tags: [geriatrica, pequena], quantidade: 10, doador: Itallo/10154010408 | 3 - cobertor, tags: [lã, pequeno], quantidade: 2, doador: Ariel/12345678910",
 				this.ic.listaItens("doador"));
 	}
-	
-	@Test
-	public void testListaItensNecessariosVazio() {
-		
-		assertEquals("",this.ic.listaItens("receptor"));
-	}
-	
+
 	@Test
 	public void testListaItensNecessarios() {
-		
-		this.uc.atualizaReceptores("arquivos_sistema/novosReceptores.csv");
-		
-		this.ic.adicionaItem("80643201009", "fralda", 2, "bebe,pequena");
-		
-		this.ic.adicionaItem("58090077080", "cobertor", 10, "la,grande");
-		
-		assertEquals("2 - fralda, tags: [bebe, pequena], quantidade: 2, Receptor: Tomas Otavio Lucas Teixeira/80643201009 | 3 - cobertor, tags: [la, grande], quantidade: 10, Receptor: Isabelly Alice Bernardes/58090077080",this.ic.listaItens("receptor"));
+		assertEquals("2 - fralda, tags: [geriatrica, pequena], quantidade: 10, Receptor: Murilo Luiz Brito/84473712044",
+				this.ic.listaItens("receptor"));
 	}
-
 
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoVazia() {
 
-		assertThrows(IllegalArgumentException.class, () -> {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
 			this.ic.pesquisaItemParaDoacaoPorDescricao("");
 
 		});
@@ -400,37 +389,138 @@ class ItemControllerTest {
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoNula() {
 
-		assertThrows(IllegalArgumentException.class, () -> {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
 			this.ic.pesquisaItemParaDoacaoPorDescricao(null);
 
 		});
 	}
-	
+
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoInexistente() {
 
-		assertEquals("",this.ic.pesquisaItemParaDoacaoPorDescricao("cobertor"));
+		assertEquals("", this.ic.pesquisaItemParaDoacaoPorDescricao("cobertor"));
 	}
-	
+
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoUpperCase() {
 
-		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.ic.pesquisaItemParaDoacaoPorDescricao("FRALDA"));
+		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",
+				this.ic.pesquisaItemParaDoacaoPorDescricao("FRALDA"));
 	}
-	
+
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricaoUpperLowerCase() {
 
-		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.ic.pesquisaItemParaDoacaoPorDescricao("Fralda"));
+		assertEquals("1 - fralda, tags: [geriatrica, pequena], quantidade: 10",
+				this.ic.pesquisaItemParaDoacaoPorDescricao("Fralda"));
 	}
-	
-	
+
 	@Test
 	public void testPesquisaItemParaDoacaoPorDescricao() {
-          
-		this.ic.adicionaItem("12345678910", "fralda", 2, "bebe,pequena");
- 
-		assertEquals("2 - fralda, tags: [bebe, pequena], quantidade: 2 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10",this.ic.pesquisaItemParaDoacaoPorDescricao("fralda"));
-	}	
 
+		this.ic.adicionaItem("12345678910", "fralda", 2, "bebe,pequena");
+
+		assertEquals(
+				"3 - fralda, tags: [bebe, pequena], quantidade: 2 | 1 - fralda, tags: [geriatrica, pequena], quantidade: 10",
+				this.ic.pesquisaItemParaDoacaoPorDescricao("fralda"));
+	}
+
+	@Test
+	public void testRealizaDoacaoItemNInvalido() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.realizaDoacao("2", "-1", "06/12/2018");
+		});
+		assertEquals("Entrada invalida: id do item nao pode ser negativo.", aux.getMessage());
+	}
+
+	@Test
+	public void testRealizaDoacaoItemDInvalido() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.realizaDoacao("-1", "2", "06/12/2018");
+		});
+		assertEquals("Entrada invalida: id do item nao pode ser negativo.", aux.getMessage());
+	}
+
+	@Test
+	public void testRealizaDoacaoItemDataNula() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.realizaDoacao("1", "2", null);
+		});
+		assertEquals("Entrada invalida: data nao pode ser vazia ou nula.", aux.getMessage());
+	}
+
+	@Test
+	public void testRealizaDoacaoItemDataVazia() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.realizaDoacao("2", "1", "    ");
+		});
+		assertEquals("Entrada invalida: data nao pode ser vazia ou nula.", aux.getMessage());
+	}
+
+	@Test
+	public void testRealizaDoacao() {
+		assertEquals("", this.ic.listaDoacoes());
+
+		this.ic.realizaDoacao("2", "1", "06/12/2018");
+		assertEquals(
+				"06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044",
+				this.ic.listaDoacoes());
+
+		this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,pequena");
+		this.ic.adicionaItem("84473712044", "fralda", 10, "geriatrica,pequena");
+		this.ic.realizaDoacao("4", "3", "07/12/2018");
+		assertEquals(
+				"06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044 | 07/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044",
+				this.ic.listaDoacoes());
+
+		this.ic.adicionaItem("10154010408", "fralda", 10, "geriatrica,pequena");
+		this.ic.adicionaItem("84473712044", "fralda", 10, "geriatrica,pequena");
+		this.ic.realizaDoacao("6", "5", "06/12/2018");
+		assertEquals(
+				"06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044 | 06/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044 | 07/12/2018 - doador: Itallo/10154010408, item: fralda, quantidade: 10, receptor: Murilo Luiz Brito/84473712044",
+				this.ic.listaDoacoes());
+
+	}
+
+	@Test
+	public void testMatch() {
+		Throwable aux = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.match(null, null);
+		});
+
+		Throwable aux1 = assertThrows(IllegalArgumentException.class, () -> {
+			this.ic.match("234234", "-1");
+		});
+
+		assertEquals("Entrada invalida: id do usuario nao pode ser vazio ou nulo.", aux.getMessage());
+		assertEquals("Entrada invalida: id do item nao pode ser negativo.", aux1.getMessage());
+
+	}
+
+	@Test
+	public void testInicializaSistema() {
+
+		String itens = this.ic.listaDescritorDeItensParaDoacao();
+		
+		this.ic.inicializaSistema();
+		
+		String itensPopulados = this.ic.listaDescritorDeItensParaDoacao();
+
+		assertNotEquals(itens, itensPopulados);
+
+	}
+
+	@Test
+	public void testFinalizaSistema() {
+
+		ic.inicializaSistema();
+
+		String itens = this.ic.listaDescritorDeItensParaDoacao();
+
+		ic.finalizaSistema();
+
+		ic.inicializaSistema();
+
+		assertEquals(itens, this.ic.listaDescritorDeItensParaDoacao());
+	}
 }

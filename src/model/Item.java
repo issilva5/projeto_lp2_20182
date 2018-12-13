@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,9 @@ import java.util.List;
  * Representacao de um item no sistema
  *
  */
-public class Item implements Comparable<Item> {
+public class Item implements Comparable<Item>, Serializable {
+
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * Identificador do item no sistema.
@@ -106,6 +109,19 @@ public class Item implements Comparable<Item> {
 		this.quantidade = quantidade;
 		return aux;
 	}
+	
+	/**
+	 * Altera a quantidade de um item a partir de um delta.
+	 * Esse delta pode ser negativo.
+	 * 
+	 * @param delta variação de quantidade a ser aplicada.
+	 * @return diferença entre a nova quantidade e quantidade anterior.
+	 */
+	public int setQuantidadeDelta(int delta) {
+		int aux = delta - this.quantidade;
+		this.quantidade = delta;
+		return aux;
+	}
 
 	/**
 	 * Define as tags do item.
@@ -189,6 +205,15 @@ public class Item implements Comparable<Item> {
 	public String getTag() {
 
 		return this.tags.toString();
+	}
+	
+
+	/**
+	 * Retorna a lista de tags do item.
+	 * @return lista de tags do item.
+	 */
+	public List<String> getTags() {
+		return tags;
 	}
 
 	/**

@@ -1,15 +1,16 @@
-package controller;
+package view;
 
 import java.io.IOException;
 
+import controller.ItemController;
+import controller.UsuarioController;
 import easyaccept.EasyAccept;
 
 public class Facade {
 
-	UsuarioController usuarioController = new UsuarioController();
-	ItemController itemController = new ItemController(usuarioController);
-
-	// Controller Usuario
+	
+	private UsuarioController usuarioController = new UsuarioController();
+	private ItemController itemController = new ItemController(usuarioController);
 
 	public String adicionaDoador(String docID, String nome, String email, String celular, String classe) {
 		return usuarioController.adicionaDoador(docID, nome, email, celular, classe);
@@ -38,8 +39,6 @@ public class Facade {
 	public void atualizaReceptores(String path) {
 		this.usuarioController.atualizaReceptores(path);
 	}
-
-	// ITEM CONTROLLER
 	
 	public void adicionaDescritor(String descricao) {
 		this.itemController.adicionaDescritor(descricao);
@@ -72,12 +71,10 @@ public class Facade {
 	public String pesquisaItemParaDoacaoPorDescricao(String desc) {
 		return this.itemController.pesquisaItemParaDoacaoPorDescricao(desc);
 	}
-
-	//US4
 	
 	public String adicionaItemNecessario(String idReceptor, String descricaoItem, int quantidade, String tags) {
 		return this.itemController.adicionaItem(idReceptor, descricaoItem, quantidade, tags);
-	}
+	} 
 	
 	public String listaItensNecessarios() {
 		return this.itemController.listaItens("receptor");
@@ -91,15 +88,37 @@ public class Facade {
 		this.itemController.removeItem(idItem, idReceptor);
 	}
 	
+	public String match (String idReceptor,String idItemNecessario) {
+		return this.itemController.match(idReceptor, idItemNecessario);
+	}
 	
-	// TESTES DE ACEITAÇÃO
+	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+		return this.itemController.realizaDoacao(idItemNecessario,idItemDoado,data);
+	}
+	
+	public String listaDoacoes() {
+		return this.itemController.listaDoacoes();
+	}
+	
+	public void finalizaSistema() {
+		this.usuarioController.finalizaSistema();
+		this.itemController.finalizaSistema();
+	}
+	
+	public void iniciaSistema() {
+		this.itemController.inicializaSistema();
+		this.usuarioController.inicializaSistema();
+	}
 
 	public static void main(String[] args) {
-		args = new String[] {"controller.Facade", 
+		args = new String[] {"view.Facade", 
 							 "acceptance_tests/use_case_1.txt",
 							 "acceptance_tests/use_case_2.txt",
 							 "acceptance_tests/use_case_3.txt",
-							 "acceptance_tests/use_case_4.txt"};
+							 "acceptance_tests/use_case_4.txt",
+							 "acceptance_tests/use_case_5.txt",
+							 "acceptance_tests/use_case_6.txt",
+							 "acceptance_tests/use_case_7.txt"};
 		EasyAccept.main(args);
 	}
 

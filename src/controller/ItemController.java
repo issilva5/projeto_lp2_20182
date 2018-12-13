@@ -1,8 +1,17 @@
 package controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
+import model.*;
 import model.Descritor;
 
 /**
@@ -24,9 +33,14 @@ public class ItemController {
 	 */
 
 	private UsuarioController usuarioController;
+	
+	/**
+	 * Lista das doações realizadas no sistema.
+	 */
+	private List<Doacao> doacao = new ArrayList<>();
 
 	/**
-	 * numero de identificacao disponível para ser alocado ao item
+	 * Numero de identificacao disponível para ser alocado ao item
 	 */
 
 	private int numeroID;
@@ -52,17 +66,16 @@ public class ItemController {
 	 */
 
 	public void adicionaDescritor(String descricao) {
-		
+
 		if (descricao == null || descricao.trim().isEmpty()) {
 
 			throw new IllegalArgumentException("Entrada invalida: descricao nao pode ser vazia ou nula.");
 		}
-		
+
 		descricao = descricao.trim().toLowerCase();
-		
+
 		if (this.descritores.containsKey(descricao)) {
-			throw new UnsupportedOperationException(
-					"Descritor de Item ja existente: " + descricao + ".");
+			throw new UnsupportedOperationException("Descritor de Item ja existente: " + descricao + ".");
 		}
 
 		this.descritores.put(descricao, new Descritor(descricao, 0));
@@ -92,7 +105,7 @@ public class ItemController {
 		}
 
 		descricaoItem = descricaoItem.trim().toLowerCase();
-		
+
 		if (quantidade <= 0) {
 
 			throw new IllegalArgumentException("Entrada invalida: quantidade deve ser maior que zero.");
@@ -107,8 +120,7 @@ public class ItemController {
 
 		if (!this.descritores.containsKey(descricaoItem)) {
 
-			this.descritores.put(descricaoItem,
-					new Descritor(descricaoItem, 0));
+			this.descritores.put(descricaoItem, new Descritor(descricaoItem, 0));
 		}
 
 		this.numeroID++;
@@ -126,7 +138,7 @@ public class ItemController {
 	/**
 	 * Exibe um item de um doador específico.
 	 * 
-	 * @param idItem   identificador do item a ser exibido.
+	 * @param idItem    identificador do item a ser exibido.
 	 * @param idUsuario identificador do usuário.
 	 * @return String contendo a representação do item.
 	 */
@@ -156,7 +168,7 @@ public class ItemController {
 	 * Atualiza a quantidade ou as tags de um item de um doador.
 	 * 
 	 * @param idItem     identificador do item.
-	 * @param idUsuario   identificador do doador.
+	 * @param idUsuario  identificador do doador.
 	 * @param quantidade nova quantidade do item.
 	 * @param tags       novas tags.
 	 * @return String contendo a representação do item.
@@ -169,8 +181,8 @@ public class ItemController {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser vazia ou nula.");
 
 		}
-		
-		if (Long.parseLong(idItem) < 0) {
+
+		if (Integer.parseInt(idItem) < 0) {
 			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
 		}
 
@@ -180,16 +192,12 @@ public class ItemController {
 
 		}
 
-//		if (quantidade < 0) {
-//			throw new IllegalArgumentException("Entrada invalida: quantidade nao pode ser negativa.");
-//		}
-
 		if (tags != null && !tags.trim().isEmpty())
 			this.usuarioController.atualizaTagsItem(idItem, idUsuario, tags);
 
-		if(quantidade > 0) {
+		if (quantidade > 0) {
 			int delta = this.usuarioController.atualizaQuantidadeItem(idItem, idUsuario, quantidade);
-			
+
 			String descritor = this.usuarioController.getItemDescritor(idItem, idUsuario);
 			this.descritores.get(descritor).changeQuant(delta);
 		}
@@ -201,7 +209,7 @@ public class ItemController {
 	/**
 	 * Remove item para doacao a partir do id do tem e do id do doador.
 	 * 
-	 * @param idItem   identificador do item.
+	 * @param idItem    identificador do item.
 	 * @param idUsuario identificador do usuário.
 	 */
 
@@ -276,8 +284,213 @@ public class ItemController {
 		}
 
 		desc = desc.trim().toLowerCase();
-		
+
 		return this.usuarioController.pesquisaItemParaDoacaoPorDescricao(desc);
+	}
+
+	/**
+	 * 
+	 * Realiza match de itens para doacao com base em um item necessario
+	 * 
+	 * @param idReceptor       identificador do receptor
+	 * @param idItemNecessario identificador do item necessario
+	 * @return String contendo itens para doacao que fazem match com o item
+	 *         necessario
+	 */
+
+	public String match(String idReceptor, String idItemNecessario) {
+
+		if (idReceptor == null || idReceptor.isEmpty()) {
+
+			throw new IllegalArgumentException("Entrada invalida: id do usuario nao pode ser vazio ou nulo.");
+
+		}
+
+		if (Integer.parseInt(idItemNecessario) < 0) {
+
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+
+		}
+
+		return this.usuarioController.match(idReceptor, idItemNecessario);
+
+	}
+
+	/**
+	 * Metodo que realiza Doacao
+	 * 
+	 * @param idItemNecessario Id do item necessario
+	 * @param idItemDoado      Id do item doado
+	 * @param data             Data da doação
+	 * @return String contendo a descricao da doacao
+	 */
+	public String realizaDoacao(String idItemNecessario, String idItemDoado, String data) {
+
+		if (Integer.parseInt(idItemNecessario) < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+		if (Integer.parseInt(idItemDoado) < 0) {
+			throw new IllegalArgumentException("Entrada invalida: id do item nao pode ser negativo.");
+		}
+
+		if (data == null || data.trim().isEmpty()) {
+			throw new IllegalArgumentException("Entrada invalida: data nao pode ser vazia ou nula.");
+		}
+
+		String[] vetor = this.usuarioController.realizaDoacao(idItemNecessario, idItemDoado, data);
+
+		this.descritores.get(vetor[0]).changeQuant(Integer.parseInt(vetor[1]));
+
+		this.doacao.add(new Doacao(vetor[2], vetor[0]));
+		return vetor[2];
+
+	}
+
+	/**
+	 * Metodo para listar doacoes. A listagem é ordenada pela data.
+	 * 
+	 * @return String contendo a listagem.
+	 */
+	public String listaDoacoes() {
+		String texto = "";
+
+		Collections.sort(this.doacao);
+
+		for (Doacao d : this.doacao) {
+			texto += d.toString() + " | ";
+		}
+
+		return texto.length() == 0 ? "" : texto.substring(0, texto.length() - 3);
+	}
+	
+	/**
+	 * Encerra o sistema salvando os descritores e historico de doações num arquivo.
+	 */
+	public void finalizaSistema() {
+		this.salvaDescritores();
+		this.salvaDoacoes();
+	}
+
+	private void salvaDoacoes() {
+
+		try {
+			File doacoes = new File("arquivos_sistema/doacoes");
+			FileOutputStream fos = new FileOutputStream(doacoes);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+
+			os.writeInt(this.doacao.size());
+			
+			for (Doacao d : this.doacao) {
+				os.writeObject(d);
+			}
+
+			os.close();
+			fos.close();
+
+			this.doacao.clear();
+		} catch (IOException e) {
+
+			throw new RuntimeException("Falha ao fechar sistema");
+
+		}
+
+	}
+
+	private void salvaDescritores() {
+
+		try {
+			File descritores = new File("arquivos_sistema/descritores");
+			FileOutputStream fos = new FileOutputStream(descritores);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+
+			os.writeInt(this.descritores.size());
+			
+			for (Descritor d : this.descritores.values()) {
+				os.writeObject(d);
+			}
+
+			os.close();
+			fos.close();
+
+			this.descritores.clear();
+		} catch (IOException e) {
+
+			throw new RuntimeException("Falha ao fechar sistema");
+
+		}
+
+	}
+
+	/**
+	 * Inicializa o sistema lendo os descritores e historico de doações de um arquivo.
+	 */
+	public void inicializaSistema() {
+
+		this.leDoacoes();
+		this.leDescritores();
+
+	}
+
+	private void leDescritores() {
+
+		try {
+
+			File descritores = new File("arquivos_sistema/descritores");
+			FileInputStream fis = new FileInputStream(descritores);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			Descritor d;
+
+			int tam = is.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				d = (Descritor) is.readObject();
+				this.descritores.put(d.getNome(), d);
+			}
+
+			is.close();
+			fis.close();
+
+		} catch (IOException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		} catch (ClassNotFoundException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		}
+
+	}
+
+	private void leDoacoes() {
+
+		try {
+
+			File doacoes = new File("arquivos_sistema/doacoes");
+			FileInputStream fos = new FileInputStream(doacoes);
+			ObjectInputStream os = new ObjectInputStream(fos);
+			Doacao d;
+
+			int tam = os.readInt();
+			
+			for(int i = 0; i < tam; i++) {
+				d = (Doacao) os.readObject();
+				this.doacao.add(d);
+			}
+
+			os.close();
+			fos.close();
+
+		} catch (IOException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		} catch (ClassNotFoundException e) {
+
+			throw new RuntimeException("Falha ao iniciar sistema");
+
+		}
+
 	}
 
 }

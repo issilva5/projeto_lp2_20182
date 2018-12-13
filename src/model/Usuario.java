@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +11,9 @@ import java.util.Map;
  * Representacao de um usuario no sistema
  */
 @SuppressWarnings("unused")
-public class Usuario {
+public class Usuario implements Serializable {
+
+	private static final long serialVersionUID = 4L;
 
 	/**
 	 * Nome do usuario
@@ -363,6 +366,29 @@ public class Usuario {
 	 */
 	public Collection<Item> getItens() {
 		return this.itens.values();
+	}
+	
+	/**
+	 * Retorna a lista de tags de um item
+	 * @param idItem id do item
+	 * @return lista de tags
+	 */
+
+	public List<String> getTagsItem(String idItem) {
+		return this.itens.get(idItem).getTags();
+	}
+
+	/**
+	 * Retorna um item do usuário a partir de seu ID.
+	 * 
+	 * @param idItem id do item a ser retornado.
+	 * @return Item com o Id informado, ou null caso o item não exista.
+	 */
+	public Item getItemId(String idItem) {
+		if(!this.itens.containsKey(idItem)) {
+			return null; 
+		}
+		return this.itens.get(idItem);
 	}
 
 }
